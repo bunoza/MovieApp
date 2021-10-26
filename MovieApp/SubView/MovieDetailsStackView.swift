@@ -16,6 +16,13 @@ class MovieDetailsStackView : UIView{
         return title
     }()
     
+    let genres : UILabel = {
+        let genres = UILabel()
+        genres.translatesAutoresizingMaskIntoConstraints = false
+        genres.numberOfLines = 0
+        return genres
+    }()
+    
     let movieOverview : UILabel = {
         let content = UILabel()
         content.translatesAutoresizingMaskIntoConstraints = false
@@ -40,11 +47,15 @@ class MovieDetailsStackView : UIView{
     }
     
     func setTitleText(title : String) {
-        movieTitle.attributedText = NSAttributedString(string: title, attributes: [.font : UIFont.boldSystemFont(ofSize: 17)])
+        movieTitle.attributedText = NSAttributedString(string: title, attributes: [.font : UIFont.boldSystemFont(ofSize: 20), .foregroundColor : UIColor.white])
+    }
+    
+    func setGenreText(text : String) {
+        genres.attributedText = NSAttributedString(string: text, attributes: [.font : UIFont.boldSystemFont(ofSize: 18), .foregroundColor : UIColor.white])
     }
     
     func setContentText(text : String) {
-        movieOverview.text = text
+        movieOverview.attributedText = NSAttributedString(string: text, attributes: [.font : UIFont.boldSystemFont(ofSize: 18), .foregroundColor : UIColor.white])
     }
     
     required init?(coder: NSCoder) {
@@ -53,6 +64,7 @@ class MovieDetailsStackView : UIView{
     
     func setupViews() {
         stackview.addArrangedSubview(movieTitle)
+        stackview.addArrangedSubview(genres)
         stackview.addArrangedSubview(movieOverview)
         self.addSubview(stackview)
     }

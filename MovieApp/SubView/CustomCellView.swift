@@ -7,6 +7,7 @@
 
 import Foundation
 import Kingfisher
+import UIKit
 
 class CustomCellView: UITableViewCell {
     
@@ -38,6 +39,7 @@ class CustomCellView: UITableViewCell {
         stackview.translatesAutoresizingMaskIntoConstraints = false
         stackview.axis = .horizontal
         stackview.spacing = 15
+        stackview.alignment = .center
         return stackview
     }()
     
@@ -45,7 +47,7 @@ class CustomCellView: UITableViewCell {
         let textContent = UIStackView()
         textContent.translatesAutoresizingMaskIntoConstraints = false
         textContent.axis = .vertical
-        textContent.alignment = .leading
+        textContent.spacing = 10
         textContent.distribution = .fillEqually
         return textContent
     }()
@@ -57,15 +59,17 @@ class CustomCellView: UITableViewCell {
         stackview.addArrangedSubview(image)
         stackview.addArrangedSubview(textContent)
         contentView.addSubview(stackview)
-        setupConstraints()
         contentView.backgroundColor = .darkGray
-        
+        setupConstraints()
     }
     
+    
+    
     override func layoutSubviews() {
-        contentView.clipsToBounds = true
-        contentView.layer.cornerRadius = 10
-        contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
+        super.layoutSubviews()
+        let margins = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+              contentView.frame = contentView.frame.inset(by: margins)
+              contentView.layer.cornerRadius = 15
     }
     
     required init?(coder: NSCoder) {
@@ -76,15 +80,15 @@ class CustomCellView: UITableViewCell {
         title.attributedText = NSAttributedString(string: movie.title, attributes: [.font : UIFont.boldSystemFont(ofSize: 18), .foregroundColor : UIColor.white])
         movieDescription.attributedText = NSAttributedString(string: movie.overview, attributes: [.font : UIFont.systemFont(ofSize: 15), .foregroundColor : UIColor.systemGray4])
         image.setImageFromUrl(url: Constants.imageBaseUrl + Constants.defaultPictureSize + movie.posterPath)
-        
+        self.backgroundColor = .systemGray6
     }
     
     func setupConstraints() {
         image.snp.makeConstraints { (make) in
-            make.size.equalTo(170)
+            make.size.equalTo(150)
         }
         stackview.snp.makeConstraints { make in
-            make.height.lessThanOrEqualTo(200)
+            make.height.lessThanOrEqualTo(170)
             make.edges.equalToSuperview().inset(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 20))
         }
     }

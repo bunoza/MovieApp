@@ -7,7 +7,6 @@
 
 import UIKit
 import SnapKit
-import Combine
 
 class MovieListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIViewControllerTransitioningDelegate {
     
@@ -17,15 +16,16 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
-        tableView.backgroundColor = .systemGray3
+        tableView.backgroundColor = .systemGray6
         return tableView
     }()
     
     let appearance : UINavigationBarAppearance = {
         let appearance = UINavigationBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.titleTextAttributes = [.foregroundColor: UIColor.white, .font : UIFont.init(name: "Avenir Next Condensed Bold", size: 20)!]
-        appearance.backgroundColor = UIColor.black
+//        appearance.configureWithOpaqueBackground()
+//        appearance.configureWithTransparentBackground()
+//        appearance.titleTextAttributes = [.foregroundColor: UIColor.white, .font : UIFont.init(name: "Avenir Next Condensed Bold", size: 20)!]
+        appearance.backgroundColor = UIColor.systemGray6
         return appearance
     }()
     
@@ -36,7 +36,6 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
     
     override func loadView() {
         super.loadView()
-        view.backgroundColor = .black
     }
     
     required init?(coder: NSCoder) {
@@ -44,8 +43,9 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func configureTitle(title : String) {
-        navigationController?.navigationBar.standardAppearance = appearance;
-        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+//        navigationController?.navigationBar.standardAppearance = appearance
+//        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        navigationController?.navigationBar.barTintColor = .systemGray6
         self.navigationItem.title = title
     }
     
@@ -54,13 +54,17 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
         configureTitle(title: "MovieApp")
         setupView()
         setupViewModel()
+        view.backgroundColor = .systemGray6
     }
     
     override func viewWillAppear(_ animated: Bool) {
         viewModel.ready()
         super.viewWillAppear(animated)
+        
+        navigationController?.navigationBar.isHidden = true
+        navigationController?.toolbar.isHidden = true
     }
-    
+        
     func setupTableView(){
         tableView.delegate = self
         tableView.dataSource = self
@@ -110,12 +114,12 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
         cell.configure(with: viewModel.movies[indexPath.row])
         return cell
     }
-    //    func tableView(_ tableView: UITableView,
-    //                   didSelectRowAt indexPath: IndexPath) {
-    //        let controller = MovieDetailsViewController(viewModel: MovieDetailsViewModel(id: viewModel.currentMovies[indexPath.row].id))
-    //        controller.modalPresentationStyle = .overCurrentContext
-    //        controller.transitioningDelegate = self
-    //        self.navigationController?.pushViewController(controller, animated: true)
-    //    }
+    func tableView(_ tableView: UITableView,
+                   didSelectRowAt indexPath: IndexPath) {
+        let controller = MovieDetailsViewController(viewModel: MovieDetailsViewModel(movie: viewModel.movies[indexPath.row]))
+        controller.modalPresentationStyle = .overCurrentContext
+        controller.transitioningDelegate = self
+        self.navigationController?.pushViewController(controller, animated: true)
+    }
     
 }
