@@ -19,6 +19,8 @@
 		C50D47DC27219BFF005DF631 /* SerializationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50D47DB27219BFF005DF631 /* SerializationManager.swift */; };
 		C50D47DF27219C87005DF631 /* MovieItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50D47DE27219C87005DF631 /* MovieItem.swift */; };
 		C50D47E127219E8D005DF631 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50D47E027219E8D005DF631 /* Movie.swift */; };
+		C52D1485272EA29600E350EF /* WatchedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52D1484272EA29600E350EF /* WatchedButton.swift */; };
+		C52D1487272EA76C00E350EF /* FavoriteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52D1486272EA76C00E350EF /* FavoriteButton.swift */; };
 		C5A9BA2B270F72D70024065C /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A9BA2A270F72D70024065C /* Constants.swift */; };
 		C5A9BA2E270F776F0024065C /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A9BA2D270F776F0024065C /* Repository.swift */; };
 		C5E73364270B5C86001265C4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E73363270B5C86001265C4 /* AppDelegate.swift */; };
@@ -45,6 +47,8 @@
 		C50D47DB27219BFF005DF631 /* SerializationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerializationManager.swift; sourceTree = "<group>"; };
 		C50D47DE27219C87005DF631 /* MovieItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieItem.swift; sourceTree = "<group>"; };
 		C50D47E027219E8D005DF631 /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
+		C52D1484272EA29600E350EF /* WatchedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchedButton.swift; sourceTree = "<group>"; };
+		C52D1486272EA76C00E350EF /* FavoriteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteButton.swift; sourceTree = "<group>"; };
 		C5A9BA2A270F72D70024065C /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		C5A9BA2D270F776F0024065C /* Repository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repository.swift; sourceTree = "<group>"; };
 		C5E73360270B5C86001265C4 /* MovieApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -125,9 +129,19 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		C52D1483272EA27F00E350EF /* Buttons */ = {
+			isa = PBXGroup;
+			children = (
+				C52D1484272EA29600E350EF /* WatchedButton.swift */,
+				C52D1486272EA76C00E350EF /* FavoriteButton.swift */,
+			);
+			path = Buttons;
+			sourceTree = "<group>";
+		};
 		C5A9BA29270F72C40024065C /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				C52D1483272EA27F00E350EF /* Buttons */,
 				C50D47DD27219C7B005DF631 /* Models */,
 				C50D47D627219B9B005DF631 /* Networking */,
 				C501C17027104A5500FC0CC3 /* Extensions */,
@@ -374,10 +388,12 @@
 				C501C17A27105D0900FC0CC3 /* MovieDetailsViewController.swift in Sources */,
 				C50D47DA27219BD5005DF631 /* RestManager.swift in Sources */,
 				C50D47E127219E8D005DF631 /* Movie.swift in Sources */,
+				C52D1487272EA76C00E350EF /* FavoriteButton.swift in Sources */,
 				C501C17C27105D9C00FC0CC3 /* MovieDetailsStackView.swift in Sources */,
 				C5E73368270B5C86001265C4 /* MovieListViewController.swift in Sources */,
 				C5E73364270B5C86001265C4 /* AppDelegate.swift in Sources */,
 				C50D47DF27219C87005DF631 /* MovieItem.swift in Sources */,
+				C52D1485272EA29600E350EF /* WatchedButton.swift in Sources */,
 				C5A9BA2E270F776F0024065C /* Repository.swift in Sources */,
 				C5EE38B02710DF9800254C53 /* MovieDetailsViewModel.swift in Sources */,
 				C50D47D827219BB3005DF631 /* NetworkError.swift in Sources */,

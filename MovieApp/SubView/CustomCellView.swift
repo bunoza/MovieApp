@@ -11,6 +11,9 @@ import UIKit
 
 class CustomCellView: UITableViewCell {
     
+    var id : Int
+    let defaults = UserDefaults.standard
+    
     let image : UIImageView = {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
@@ -39,31 +42,53 @@ class CustomCellView: UITableViewCell {
         stackview.translatesAutoresizingMaskIntoConstraints = false
         stackview.axis = .horizontal
         stackview.spacing = 15
-        stackview.alignment = .center
+        stackview.distribution = .fillProportionally
         return stackview
+    }()
+    
+    let watchedButton : WatchedButton = {
+        let watchedButton = WatchedButton()
+        return watchedButton
+    }()
+    
+    let favoriteButton : FavoriteButton = {
+        let favoriteButton = FavoriteButton()
+        return favoriteButton
     }()
     
     let textContent: UIStackView = {
         let textContent = UIStackView()
         textContent.translatesAutoresizingMaskIntoConstraints = false
         textContent.axis = .vertical
-        textContent.spacing = 10
+        textContent.spacing = 5
         textContent.distribution = .fillEqually
         return textContent
     }()
     
+    let buttonStack: UIStackView = {
+        let buttonStack = UIStackView()
+        buttonStack.translatesAutoresizingMaskIntoConstraints = false
+        buttonStack.axis = .horizontal
+        buttonStack.spacing = 15
+        buttonStack.distribution = .fillProportionally
+        buttonStack.alignment = .trailing
+        return buttonStack
+    }()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        id = 0
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         textContent.addArrangedSubview(title)
         textContent.addArrangedSubview(movieDescription)
         stackview.addArrangedSubview(image)
         stackview.addArrangedSubview(textContent)
+        textContent.addArrangedSubview(buttonStack)
+        buttonStack.addArrangedSubview(favoriteButton)
+        buttonStack.addArrangedSubview(watchedButton)
         contentView.addSubview(stackview)
         contentView.backgroundColor = .darkGray
         setupConstraints()
     }
-    
-    
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -77,10 +102,30 @@ class CustomCellView: UITableViewCell {
     }
     
     func configure(with movie: MovieItem) {
+        var favorites = defaults.object(forKey: "favorites") as? [Int] ?? [Int]()
+        var watched = defaults.object(forKey: "watched") as? [Int] ?? [Int]()
+
         title.attributedText = NSAttributedString(string: movie.title, attributes: [.font : UIFont.boldSystemFont(ofSize: 18), .foregroundColor : UIColor.white])
         movieDescription.attributedText = NSAttributedString(string: movie.overview, attributes: [.font : UIFont.systemFont(ofSize: 15), .foregroundColor : UIColor.systemGray4])
         image.setImageFromUrl(url: Constants.imageBaseUrl + Constants.defaultPictureSize + movie.posterPath)
+        self.id = movie.id
+        watchedButton.button.addTarget(self, action: #selector(toggleWatched), for: .touchUpInside)
+        favoriteButton.button.addTarget(self, action: #selector(toggleFavorite), for: .touchUpInside)
+        if favorites.contains(id) {
+            favoriteButton.toggleOnStart()
+        }
+        if watched.contains(id) {
+            watchedButton.toggleOnStart()
+        }
         self.backgroundColor = .systemGray6
+    }
+    
+    @objc func toggleWatched() {
+        watchedButton.toggle(value: id)
+    }
+    
+    @objc func toggleFavorite() {
+        favoriteButton.toggle(value: id)
     }
     
     func setupConstraints() {

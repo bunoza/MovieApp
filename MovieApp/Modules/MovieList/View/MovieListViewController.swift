@@ -20,15 +20,6 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
         return tableView
     }()
     
-    let appearance : UINavigationBarAppearance = {
-        let appearance = UINavigationBarAppearance()
-//        appearance.configureWithOpaqueBackground()
-//        appearance.configureWithTransparentBackground()
-//        appearance.titleTextAttributes = [.foregroundColor: UIColor.white, .font : UIFont.init(name: "Avenir Next Condensed Bold", size: 20)!]
-        appearance.backgroundColor = UIColor.systemGray6
-        return appearance
-    }()
-    
     init(viewModel: MovieListViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -43,8 +34,6 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func configureTitle(title : String) {
-//        navigationController?.navigationBar.standardAppearance = appearance
-//        navigationController?.navigationBar.scrollEdgeAppearance = appearance
         navigationController?.navigationBar.barTintColor = .systemGray6
         self.navigationItem.title = title
     }
@@ -64,7 +53,7 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
         navigationController?.navigationBar.isHidden = true
         navigationController?.toolbar.isHidden = true
     }
-        
+    
     func setupTableView(){
         tableView.delegate = self
         tableView.dataSource = self
@@ -119,6 +108,8 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
         let controller = MovieDetailsViewController(viewModel: MovieDetailsViewModel(movie: viewModel.movies[indexPath.row]))
         controller.modalPresentationStyle = .overCurrentContext
         controller.transitioningDelegate = self
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        self.navigationItem.backBarButtonItem?.tintColor = .white
         self.navigationController?.pushViewController(controller, animated: true)
     }
     

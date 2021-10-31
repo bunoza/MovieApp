@@ -22,11 +22,26 @@ class MovieDetailsViewController : UIViewController {
         imageview.translatesAutoresizingMaskIntoConstraints = false
         return imageview
     }()
+    let watchedButton : WatchedButton = {
+        let watchedButton = WatchedButton()
+        return watchedButton
+    }()
+    
+    let favoriteButton : FavoriteButton = {
+        let favoriteButton = FavoriteButton()
+        return favoriteButton
+    }()
     
     let movieDetailsStackView: MovieDetailsStackView = {
         let movieDetailsStackView = MovieDetailsStackView()
         movieDetailsStackView.translatesAutoresizingMaskIntoConstraints = false
         return movieDetailsStackView
+    }()
+    
+    let contentView: UIView = {
+        let contentView = UIView()
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        return contentView
     }()
     
     init(viewModel : MovieDetailsViewModel) {
@@ -39,6 +54,7 @@ class MovieDetailsViewController : UIViewController {
         movieDetailsStackView.setTitleText(title: viewModel.movie.title)
         movieDetailsStackView.setGenreText(text: viewModel.movie.releaseDate)
         movieDetailsStackView.setContentText(text: viewModel.movie.overview)
+        
     }
     
     func setupViewModel() {
@@ -59,21 +75,33 @@ class MovieDetailsViewController : UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        navigationController?.navigationBar.isHidden = false
+        navigationController?.navigationBar.isHidden = false
+//        navigationController?.navigationBar.barTintColor = .systemGray6
+//        navigationController?.hidesBarsOnSwipe = true
+        
+        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: watchedButton), UIBarButtonItem(customView: favoriteButton)]
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController!.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationController!.navigationBar.shadowImage = UIImage()
+        self.navigationController!.navigationBar.isTranslucent = true
         setupViews()
         setupConstraints()
         configureNavigationBar(title: viewModel.movie.title)
         viewModel.ready()
     }
     
+    
     func setupViews() {
         view.addSubview(scrollView)
-        scrollView.addSubview(movieDetailsStackView)
-        scrollView.addSubview(imageview)
+        scrollView.addSubview(contentView)
+        contentView.addSubview(imageview)
+        contentView.addSubview(movieDetailsStackView)
+
+        contentView.insertSubview(watchedButton, aboveSubview: imageview)
+        contentView.insertSubview(favoriteButton, aboveSubview: imageview)
     }
     
     func configureNavigationBar(title : String) {
@@ -85,14 +113,16 @@ class MovieDetailsViewController : UIViewController {
 ////         promjeni boju
 //        self.navigationController?.navigationBar.standardAppearance = appearance;
 //        self.navigationController?.navigationBar.scrollEdgeAppearance = self.navigationController?.navigationBar.standardAppearance
-    
 
     }
 
     
     func setupConstraints(){
         scrollView.snp.makeConstraints { make in
-            make.edges.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(view)
+            make.bottom.equalTo(view)
+            make.width.equalTo(view)
+            make.height.equalTo(view)
         }
         imageview.snp.makeConstraints { make in
             make.height.lessThanOrEqualTo(550)
@@ -101,6 +131,12 @@ class MovieDetailsViewController : UIViewController {
         movieDetailsStackView.snp.makeConstraints { make in
             make.top.equalTo(imageview.snp.bottom)
             make.width.equalToSuperview()
+        }
+        contentView.snp.makeConstraints { (make) in
+            make.top.equalTo(scrollView)
+            make.bottom.equalTo(scrollView)
+            make.width.equalTo(scrollView)
+            make.height.equalTo(scrollView)
         }
     }
 }

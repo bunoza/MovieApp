@@ -11,6 +11,7 @@ class MovieListViewModel {
     
     var movies: [MovieItem] = []
     let repository : Repository
+    let defaults = UserDefaults.standard
     
     init(){
         //        dependency injection
@@ -20,6 +21,10 @@ class MovieListViewModel {
     var isLoading: ((Bool) -> ())?
     var dataReady: (() -> ())?
     var gotError: ((NetworkError) -> ())?
+    
+    func watchedToggle(){
+        
+    }
     
     func ready() {
         ///begin loading
