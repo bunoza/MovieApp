@@ -35,8 +35,10 @@ class WatchedButton : UIView {
         }
     }
     
-    func toggleOnStart(){
-        if button.currentImage == UIImage(named: "watched_unfilled") {
+    func toggleOnStart(value: Int){
+        let watched = defaults.object(forKey: "watched") as? [Int] ?? [Int]()
+
+        if watched.contains(value) {
             button.setImage(UIImage(named: "watched_filled"), for: .normal)
         } else {
             button.setImage(UIImage(named: "watched_unfilled"), for: .normal)
@@ -52,7 +54,7 @@ class WatchedButton : UIView {
             defaults.set(tempArray, forKey: "watched")
         } else {
             button.setImage(UIImage(named: "watched_unfilled"), for: .normal)
-            tempArray = tempArray.filter {$0 as! Int != value}
+            tempArray = tempArray.filter {$0 != value}
             defaults.set(tempArray, forKey: "watched")
         }
         print(tempArray)

@@ -36,12 +36,15 @@ class FavoriteButton : UIView {
         }
     }
     
-    func toggleOnStart(){
-        if button.currentImage == UIImage(named: "star_unfilled") {
+    func toggleOnStart(value: Int){
+        let favorites = defaults.object(forKey: "favorites") as? [Int] ?? [Int]()
+
+        if favorites.contains(value) {
             button.setImage(UIImage(named: "star_filled"), for: .normal)
         } else {
             button.setImage(UIImage(named: "star_unfilled"), for: .normal)
         }
+        
     }
     
     func toggle(value: Int) {
@@ -53,7 +56,7 @@ class FavoriteButton : UIView {
             defaults.set(tempArray, forKey: "favorites")
         } else {
             button.setImage(UIImage(named: "star_unfilled"), for: .normal)
-            tempArray = tempArray.filter {$0 as! Int != value}
+            tempArray = tempArray.filter {$0 != value}
             defaults.set(tempArray, forKey: "favorites")
         }
         print(tempArray)

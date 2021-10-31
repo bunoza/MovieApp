@@ -10,6 +10,7 @@ import UIKit
 class MovieDetailsViewController : UIViewController {
     
     let viewModel : MovieDetailsViewModel
+    let defaults = UserDefaults.standard
     
     let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -22,6 +23,7 @@ class MovieDetailsViewController : UIViewController {
         imageview.translatesAutoresizingMaskIntoConstraints = false
         return imageview
     }()
+    
     let watchedButton : WatchedButton = {
         let watchedButton = WatchedButton()
         return watchedButton
@@ -54,7 +56,25 @@ class MovieDetailsViewController : UIViewController {
         movieDetailsStackView.setTitleText(title: viewModel.movie.title)
         movieDetailsStackView.setGenreText(text: viewModel.movie.releaseDate)
         movieDetailsStackView.setContentText(text: viewModel.movie.overview)
-        
+        let favorites = defaults.object(forKey: "favorites") as? [Int] ?? [Int]()
+        let watched = defaults.object(forKey: "watched") as? [Int] ?? [Int]()
+
+        watchedButton.button.addTarget(self, action: #selector(toggleWatched), for: .touchUpInside)
+        favoriteButton.button.addTarget(self, action: #selector(toggleFavorite), for: .touchUpInside)
+        if favorites.contains(viewModel.movie.id) {
+            favoriteButton.toggleOnStart(value: viewModel.movie.id)
+        }
+        if watched.contains(viewModel.movie.id) {
+            watchedButton.toggleOnStart(value: viewModel.movie.id)
+        }
+    }
+    
+    @objc func toggleWatched() {
+        watchedButton.toggle(value: viewModel.movie.id)
+    }
+    
+    @objc func toggleFavorite() {
+        favoriteButton.toggle(value: viewModel.movie.id)
     }
     
     func setupViewModel() {
@@ -63,6 +83,7 @@ class MovieDetailsViewController : UIViewController {
             strongSelf.setupCurrentMovie()
         }
     }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

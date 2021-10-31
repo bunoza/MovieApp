@@ -11,7 +11,7 @@ import UIKit
 
 class CustomCellView: UITableViewCell {
     
-    var id : Int
+    var id : Int = -1
     let defaults = UserDefaults.standard
     
     let image : UIImageView = {
@@ -60,7 +60,7 @@ class CustomCellView: UITableViewCell {
         let textContent = UIStackView()
         textContent.translatesAutoresizingMaskIntoConstraints = false
         textContent.axis = .vertical
-        textContent.spacing = 5
+        textContent.spacing = 0
         textContent.distribution = .fillEqually
         return textContent
     }()
@@ -76,7 +76,6 @@ class CustomCellView: UITableViewCell {
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        id = 0
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         textContent.addArrangedSubview(title)
         textContent.addArrangedSubview(movieDescription)
@@ -87,14 +86,16 @@ class CustomCellView: UITableViewCell {
         buttonStack.addArrangedSubview(watchedButton)
         contentView.addSubview(stackview)
         contentView.backgroundColor = .darkGray
+        watchedButton.button.addTarget(self, action: #selector(toggleWatched), for: .touchUpInside)
+        favoriteButton.button.addTarget(self, action: #selector(toggleFavorite), for: .touchUpInside)
         setupConstraints()
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         let margins = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-              contentView.frame = contentView.frame.inset(by: margins)
-              contentView.layer.cornerRadius = 15
+        contentView.frame = contentView.frame.inset(by: margins)
+        contentView.layer.cornerRadius = 15
     }
     
     required init?(coder: NSCoder) {
@@ -102,21 +103,16 @@ class CustomCellView: UITableViewCell {
     }
     
     func configure(with movie: MovieItem) {
-        var favorites = defaults.object(forKey: "favorites") as? [Int] ?? [Int]()
-        var watched = defaults.object(forKey: "watched") as? [Int] ?? [Int]()
-
+        
         title.attributedText = NSAttributedString(string: movie.title, attributes: [.font : UIFont.boldSystemFont(ofSize: 18), .foregroundColor : UIColor.white])
         movieDescription.attributedText = NSAttributedString(string: movie.overview, attributes: [.font : UIFont.systemFont(ofSize: 15), .foregroundColor : UIColor.systemGray4])
         image.setImageFromUrl(url: Constants.imageBaseUrl + Constants.defaultPictureSize + movie.posterPath)
         self.id = movie.id
-        watchedButton.button.addTarget(self, action: #selector(toggleWatched), for: .touchUpInside)
-        favoriteButton.button.addTarget(self, action: #selector(toggleFavorite), for: .touchUpInside)
-        if favorites.contains(id) {
-            favoriteButton.toggleOnStart()
-        }
-        if watched.contains(id) {
-            watchedButton.toggleOnStart()
-        }
+//        _ = defaults.object(forKey: "favorites") as? [Int] ?? [Int]()
+//        _ = defaults.object(forKey: "watched") as? [Int] ?? [Int]()
+        
+        favoriteButton.toggleOnStart(value: id)
+        watchedButton.toggleOnStart(value: id)
         self.backgroundColor = .systemGray6
     }
     
@@ -130,7 +126,8 @@ class CustomCellView: UITableViewCell {
     
     func setupConstraints() {
         image.snp.makeConstraints { (make) in
-            make.size.equalTo(150)
+            make.height.equalTo(170)
+            make.width.equalTo(130)
         }
         stackview.snp.makeConstraints { make in
             make.height.lessThanOrEqualTo(170)
