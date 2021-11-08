@@ -12,7 +12,9 @@ import UIKit
 class CustomCellView: UITableViewCell {
     
     var id : Int = -1
-    let defaults = UserDefaults.standard
+    
+    var watchedClicked: (() -> ())?
+    var favouriteClicked: (() -> ())?
     
     let image : UIImageView = {
         let image = UIImageView()
@@ -103,25 +105,21 @@ class CustomCellView: UITableViewCell {
     }
     
     func configure(with movie: MovieItem) {
-        
         title.attributedText = NSAttributedString(string: movie.title, attributes: [.font : UIFont.boldSystemFont(ofSize: 18), .foregroundColor : UIColor.white])
         movieDescription.attributedText = NSAttributedString(string: movie.overview, attributes: [.font : UIFont.systemFont(ofSize: 15), .foregroundColor : UIColor.systemGray4])
         image.setImageFromUrl(url: Constants.imageBaseUrl + Constants.defaultPictureSize + movie.posterPath)
         self.id = movie.id
-//        _ = defaults.object(forKey: "favorites") as? [Int] ?? [Int]()
-//        _ = defaults.object(forKey: "watched") as? [Int] ?? [Int]()
-        
-        favoriteButton.toggleOnStart(value: id)
-        watchedButton.toggleOnStart(value: id)
+        movie.isWatched ? watchedButton.turnOn() : watchedButton.turnOff()
+        movie.isFavourite ? favoriteButton.turnOn() : favoriteButton.turnOff()
         self.backgroundColor = .systemGray6
     }
     
     @objc func toggleWatched() {
-        watchedButton.toggle(value: id)
+        watchedClicked?()
     }
     
     @objc func toggleFavorite() {
-        favoriteButton.toggle(value: id)
+        favouriteClicked?()
     }
     
     func setupConstraints() {

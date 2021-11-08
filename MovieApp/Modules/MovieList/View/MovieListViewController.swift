@@ -101,6 +101,32 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: CustomCellView = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomCellView
         cell.configure(with: viewModel.movies[indexPath.row])
+        cell.watchedClicked = {
+            self.viewModel.watchedToggle(value: self.viewModel.movies[indexPath.row])
+            if self.viewModel.movies[indexPath.row].isWatched {
+                cell.watchedButton.turnOff()
+                self.viewModel.movies[indexPath.row].isWatched = false
+            } else {
+                cell.watchedButton.turnOn()
+                self.viewModel.movies[indexPath.row].isWatched = true
+            }
+        }
+        cell.favouriteClicked = {
+            self.viewModel.favouriteToggle(value: self.viewModel.movies[indexPath.row])
+            if self.viewModel.movies[indexPath.row].isFavourite {
+                cell.favoriteButton.turnOff()
+                self.viewModel.movies[indexPath.row].isFavourite = false
+            } else {
+                cell.favoriteButton.turnOn()
+                self.viewModel.movies[indexPath.row].isFavourite = true
+            }
+        }
+        if viewModel.movies[indexPath.row].isFavourite {
+            cell.favoriteButton.turnOn()
+        }
+        if viewModel.movies[indexPath.row].isWatched {
+            cell.watchedButton.turnOn()
+        }
         return cell
     }
     func tableView(_ tableView: UITableView,

@@ -16,3 +16,5 @@ struct MovieItem {
     var isFavourite: Bool
     var isWatched: Bool
 }
+
+

@@ -10,7 +10,6 @@ import UIKit
 class MovieDetailsViewController : UIViewController {
     
     let viewModel : MovieDetailsViewModel
-    let defaults = UserDefaults.standard
     
     let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -56,25 +55,28 @@ class MovieDetailsViewController : UIViewController {
         movieDetailsStackView.setTitleText(title: viewModel.movie.title)
         movieDetailsStackView.setGenreText(text: viewModel.movie.releaseDate)
         movieDetailsStackView.setContentText(text: viewModel.movie.overview)
-        let favorites = defaults.object(forKey: "favorites") as? [Int] ?? [Int]()
-        let watched = defaults.object(forKey: "watched") as? [Int] ?? [Int]()
-
         watchedButton.button.addTarget(self, action: #selector(toggleWatched), for: .touchUpInside)
         favoriteButton.button.addTarget(self, action: #selector(toggleFavorite), for: .touchUpInside)
-        if favorites.contains(viewModel.movie.id) {
-            favoriteButton.toggleOnStart(value: viewModel.movie.id)
-        }
-        if watched.contains(viewModel.movie.id) {
-            watchedButton.toggleOnStart(value: viewModel.movie.id)
-        }
+        viewModel.movie.isWatched ? watchedButton.turnOn() : watchedButton.turnOff()
+        viewModel.movie.isFavourite ? favoriteButton.turnOn() : favoriteButton.turnOff()
     }
     
     @objc func toggleWatched() {
-        watchedButton.toggle(value: viewModel.movie.id)
+        if self.viewModel.movie.isWatched {
+            watchedButton.turnOff()
+        } else {
+            watchedButton.turnOn()
+        }
+        viewModel.watchedToggle()
     }
     
     @objc func toggleFavorite() {
-        favoriteButton.toggle(value: viewModel.movie.id)
+        if self.viewModel.movie.isFavourite {
+            favoriteButton.turnOff()
+        } else {
+            favoriteButton.turnOn()
+        }
+        viewModel.favouriteToggle()
     }
     
     func setupViewModel() {
@@ -97,8 +99,8 @@ class MovieDetailsViewController : UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = false
-//        navigationController?.navigationBar.barTintColor = .systemGray6
-//        navigationController?.hidesBarsOnSwipe = true
+        //        navigationController?.navigationBar.barTintColor = .systemGray6
+        //        navigationController?.hidesBarsOnSwipe = true
         
         navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: watchedButton), UIBarButtonItem(customView: favoriteButton)]
     }
@@ -114,29 +116,27 @@ class MovieDetailsViewController : UIViewController {
         viewModel.ready()
     }
     
-    
     func setupViews() {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         contentView.addSubview(imageview)
         contentView.addSubview(movieDetailsStackView)
-
+        
         contentView.insertSubview(watchedButton, aboveSubview: imageview)
         contentView.insertSubview(favoriteButton, aboveSubview: imageview)
     }
     
     func configureNavigationBar(title : String) {
-//        self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white, .font : UIFont.init(name: "Avenir Next Condensed Bold", size: 20)!]
-//        self.navigationItem.title = title
-//        let appearance = UINavigationBarAppearance()
-//        appearance.configureWithTransparentBackground()
-//        appearance.backgroundColor = .systemGray6
-////         promjeni boju
-//        self.navigationController?.navigationBar.standardAppearance = appearance;
-//        self.navigationController?.navigationBar.scrollEdgeAppearance = self.navigationController?.navigationBar.standardAppearance
-
+        //        self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white, .font : UIFont.init(name: "Avenir Next Condensed Bold", size: 20)!]
+        //        self.navigationItem.title = title
+        //        let appearance = UINavigationBarAppearance()
+        //        appearance.configureWithTransparentBackground()
+        //        appearance.backgroundColor = .systemGray6
+        ////         promjeni boju
+        //        self.navigationController?.navigationBar.standardAppearance = appearance;
+        //        self.navigationController?.navigationBar.scrollEdgeAppearance = self.navigationController?.navigationBar.standardAppearance
+        
     }
-
     
     func setupConstraints(){
         scrollView.snp.makeConstraints { make in

@@ -11,8 +11,6 @@ import SwiftUI
 
 class FavoriteButton : UIView {
     
-    let defaults = UserDefaults.standard
-    
     let button : UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -36,30 +34,12 @@ class FavoriteButton : UIView {
         }
     }
     
-    func toggleOnStart(value: Int){
-        let favorites = defaults.object(forKey: "favorites") as? [Int] ?? [Int]()
-
-        if favorites.contains(value) {
-            button.setImage(UIImage(named: "star_filled"), for: .normal)
-        } else {
-            button.setImage(UIImage(named: "star_unfilled"), for: .normal)
-        }
-        
+    func turnOn() {
+        button.setImage(UIImage(named: "star_filled"), for: .normal)
     }
     
-    func toggle(value: Int) {
-        var tempArray = defaults.object(forKey: "favorites") as? [Int] ?? [Int]()
-
-        if button.currentImage == UIImage(named: "star_unfilled") {
-            button.setImage(UIImage(named: "star_filled"), for: .normal)
-            tempArray.append(value)
-            defaults.set(tempArray, forKey: "favorites")
-        } else {
-            button.setImage(UIImage(named: "star_unfilled"), for: .normal)
-            tempArray = tempArray.filter {$0 != value}
-            defaults.set(tempArray, forKey: "favorites")
-        }
-        print(tempArray)
+    func turnOff() {
+        button.setImage(UIImage(named: "star_unfilled"), for: .normal)
     }
     
     required init?(coder: NSCoder) {
