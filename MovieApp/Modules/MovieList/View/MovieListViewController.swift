@@ -16,7 +16,7 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
-        tableView.backgroundColor = .systemGray6
+        tableView.backgroundColor = UIColor(red: 0.17, green: 0.17, blue: 0.18, alpha: 1.0)
         return tableView
     }()
     
@@ -34,7 +34,7 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func configureTitle(title : String) {
-        navigationController?.navigationBar.barTintColor = .systemGray6
+        navigationController?.navigationBar.barTintColor = UIColor(red: 0.17, green: 0.17, blue: 0.18, alpha: 1.0)
         self.navigationItem.title = title
     }
     
@@ -43,7 +43,7 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
         configureTitle(title: "MovieApp")
         setupView()
         setupViewModel()
-        view.backgroundColor = .systemGray6
+        view.backgroundColor = UIColor(red: 0.17, green: 0.17, blue: 0.18, alpha: 1.0)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -92,6 +92,10 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
         setupViews()
         setupConstraints()
         setupTableView()
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+          return .lightContent
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

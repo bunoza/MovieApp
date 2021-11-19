@@ -84,10 +84,12 @@ class CustomCellView: UITableViewCell {
         stackview.addArrangedSubview(image)
         stackview.addArrangedSubview(textContent)
         textContent.addArrangedSubview(buttonStack)
+        buttonStack.addArrangedSubview(UIButton())
+        buttonStack.addArrangedSubview(UIButton())
         buttonStack.addArrangedSubview(favoriteButton)
         buttonStack.addArrangedSubview(watchedButton)
         contentView.addSubview(stackview)
-        contentView.backgroundColor = .darkGray
+        contentView.backgroundColor = UIColor(red: 0.11, green: 0.11, blue: 0.12, alpha: 1.0)
         watchedButton.button.addTarget(self, action: #selector(toggleWatched), for: .touchUpInside)
         favoriteButton.button.addTarget(self, action: #selector(toggleFavorite), for: .touchUpInside)
         setupConstraints()
@@ -111,7 +113,7 @@ class CustomCellView: UITableViewCell {
         self.id = movie.id
         movie.isWatched ? watchedButton.turnOn() : watchedButton.turnOff()
         movie.isFavourite ? favoriteButton.turnOn() : favoriteButton.turnOff()
-        self.backgroundColor = .systemGray6
+        self.backgroundColor = UIColor(red: 0.17, green: 0.17, blue: 0.18, alpha: 1.0)
     }
     
     @objc func toggleWatched() {
