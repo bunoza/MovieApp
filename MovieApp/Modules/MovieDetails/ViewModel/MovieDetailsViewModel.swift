@@ -46,12 +46,12 @@ class MovieDetailsViewModel {
         if favourite.contains(movie.id) {
             favourite = favourite.filter {$0 != movie.id}
             defaults.set(favourite, forKey: "favorites")
-            movie.isWatched = false
+            movie.isFavourite = false
             print("Favorites:  \(favourite)")
         } else {
             favourite.append(movie.id)
             defaults.set(favourite, forKey: "favorites")
-            movie.isWatched = true
+            movie.isFavourite = true
             print("Favorites:  \(favourite)")
         }
     }

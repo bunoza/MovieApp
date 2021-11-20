@@ -34,7 +34,6 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func configureTitle(title : String) {
-//        navigationController?.navigationBar.barTintColor = UIColor(red: 0.17, green: 0.17, blue: 0.18, alpha: 1.0)
         self.navigationItem.title = title
         self.navigationController?.navigationBar.barStyle = .black
         
