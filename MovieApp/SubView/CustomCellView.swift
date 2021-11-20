@@ -15,14 +15,19 @@ class CustomCellView: UITableViewCell {
     
     var watchedClicked: (() -> ())?
     var favouriteClicked: (() -> ())?
-    
-    let image : UIImageView = {
-        let image = UIImageView()
-        image.translatesAutoresizingMaskIntoConstraints = false
-        image.clipsToBounds = true
-        image.layer.cornerRadius = 10
-        image.sizeToFit()
-        return image
+    ///TO BE REPLACED WITH IMAGEYEARGRADIENT
+//    var image : UIImageView = {
+//        let image = UIImageView()
+//        image.translatesAutoresizingMaskIntoConstraints = false
+//        image.clipsToBounds = true
+//        image.layer.cornerRadius = 10
+//        image.sizeToFit()
+//        return image
+//    }()
+    let imageYearGradient : ImageYearGradient = {
+        let imageYearGradient = ImageYearGradient()
+        imageYearGradient.translatesAutoresizingMaskIntoConstraints = false
+        return imageYearGradient
     }()
     
     let title : UILabel = {
@@ -94,7 +99,7 @@ class CustomCellView: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         textContent.addArrangedSubview(title)
         textContent.addArrangedSubview(movieDescription)
-        stackview.addArrangedSubview(image)
+        stackview.addArrangedSubview(imageYearGradient)
         stackview.addArrangedSubview(textContent)
         textContent.addArrangedSubview(buttonStack)
         buttonStack.addArrangedSubview(placeHolderButtonLeft)
@@ -122,7 +127,7 @@ class CustomCellView: UITableViewCell {
     func configure(with movie: MovieItem) {
         title.attributedText = NSAttributedString(string: movie.title, attributes: [.font : UIFont.boldSystemFont(ofSize: 18), .foregroundColor : UIColor.white])
         movieDescription.attributedText = NSAttributedString(string: movie.overview, attributes: [.font : UIFont.systemFont(ofSize: 15), .foregroundColor : UIColor.systemGray4])
-        image.setImageFromUrl(url: Constants.imageBaseUrl + Constants.defaultPictureSize + movie.posterPath)
+        imageYearGradient.configureImageYearGradient(imageURL: Constants.imageBaseUrl + Constants.defaultPictureSize + movie.posterPath, year: movie.releaseDate)
         self.id = movie.id
         movie.isWatched ? watchedButton.turnOn() : watchedButton.turnOff()
         movie.isFavourite ? favoriteButton.turnOn() : favoriteButton.turnOff()
@@ -138,7 +143,7 @@ class CustomCellView: UITableViewCell {
     }
     
     func setupConstraints() {
-        image.snp.makeConstraints { (make) in
+        imageYearGradient.snp.makeConstraints { (make) in
             make.height.equalTo(170)
             make.width.equalTo(130)
         }

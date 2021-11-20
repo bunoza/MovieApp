@@ -22,6 +22,7 @@
 		C52D1485272EA29600E350EF /* WatchedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52D1484272EA29600E350EF /* WatchedButton.swift */; };
 		C52D1487272EA76C00E350EF /* FavoriteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52D1486272EA76C00E350EF /* FavoriteButton.swift */; };
 		C539D7CC2748771A00142C6F /* MovieDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = C539D7CB2748771A00142C6F /* MovieDetails.swift */; };
+		C540111B27498E8D00E54764 /* ImageYearGradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C540111A27498E8D00E54764 /* ImageYearGradient.swift */; };
 		C5A9BA2B270F72D70024065C /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A9BA2A270F72D70024065C /* Constants.swift */; };
 		C5A9BA2E270F776F0024065C /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A9BA2D270F776F0024065C /* Repository.swift */; };
 		C5E73364270B5C86001265C4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E73363270B5C86001265C4 /* AppDelegate.swift */; };
@@ -51,6 +52,7 @@
 		C52D1484272EA29600E350EF /* WatchedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchedButton.swift; sourceTree = "<group>"; };
 		C52D1486272EA76C00E350EF /* FavoriteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteButton.swift; sourceTree = "<group>"; };
 		C539D7CB2748771A00142C6F /* MovieDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetails.swift; sourceTree = "<group>"; };
+		C540111A27498E8D00E54764 /* ImageYearGradient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageYearGradient.swift; sourceTree = "<group>"; };
 		C5A9BA2A270F72D70024065C /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		C5A9BA2D270F776F0024065C /* Repository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repository.swift; sourceTree = "<group>"; };
 		C5E73360270B5C86001265C4 /* MovieApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -100,6 +102,7 @@
 			children = (
 				C501C16E27104A4100FC0CC3 /* CustomCellView.swift */,
 				C501C17B27105D9C00FC0CC3 /* MovieDetailsStackView.swift */,
+				C540111A27498E8D00E54764 /* ImageYearGradient.swift */,
 			);
 			path = SubView;
 			sourceTree = "<group>";
@@ -402,6 +405,7 @@
 				C5EE38B02710DF9800254C53 /* MovieDetailsViewModel.swift in Sources */,
 				C50D47D827219BB3005DF631 /* NetworkError.swift in Sources */,
 				C501C16F27104A4100FC0CC3 /* CustomCellView.swift in Sources */,
+				C540111B27498E8D00E54764 /* ImageYearGradient.swift in Sources */,
 				C501C17227104A6D00FC0CC3 /* UIImageView+Extensions.swift in Sources */,
 				C501C1782710558D00FC0CC3 /* UIViewController+Extensions.swift in Sources */,
 				C501C1762710556800FC0CC3 /* BlurLoaderView.swift in Sources */,
