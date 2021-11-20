@@ -34,8 +34,10 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func configureTitle(title : String) {
-        navigationController?.navigationBar.barTintColor = UIColor(red: 0.17, green: 0.17, blue: 0.18, alpha: 1.0)
+//        navigationController?.navigationBar.barTintColor = UIColor(red: 0.17, green: 0.17, blue: 0.18, alpha: 1.0)
         self.navigationItem.title = title
+        self.navigationController?.navigationBar.barStyle = .black
+        
     }
     
     override func viewDidLoad() {
@@ -94,9 +96,9 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
         setupTableView()
     }
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-          return .lightContent
-    }
+//    override var preferredStatusBarStyle: UIStatusBarStyle {
+//          return .lightContent
+//    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.movies.count
@@ -105,6 +107,9 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: CustomCellView = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomCellView
         cell.configure(with: viewModel.movies[indexPath.row])
+        let bgColorView = UIView()
+        bgColorView.backgroundColor = UIColor(red: 0.13, green: 0.13, blue: 0.14, alpha: 1.0)
+        cell.selectedBackgroundView = bgColorView
         cell.watchedClicked = {
             self.viewModel.watchedToggle(value: self.viewModel.movies[indexPath.row])
             if self.viewModel.movies[indexPath.row].isWatched {
