@@ -23,6 +23,29 @@ class MovieDetailsStackView : UIView{
         return genres
     }()
     
+    let quote : UILabel = {
+        let quote = UILabel()
+        quote.translatesAutoresizingMaskIntoConstraints = false
+        quote.numberOfLines = 0
+        quote.attributedText = NSAttributedString(string: "Quote", attributes: [.font : UIFont.boldSystemFont(ofSize: 20), .foregroundColor : UIColor.white])
+        return quote
+    }()
+    
+    let quoteText : UILabel = {
+        let quoteText = UILabel()
+        quoteText.translatesAutoresizingMaskIntoConstraints = false
+        quoteText.numberOfLines = 0
+        return quoteText
+    }()
+    
+    let descriptionLabel : UILabel = {
+        let description = UILabel()
+        description.translatesAutoresizingMaskIntoConstraints = false
+        description.numberOfLines = 0
+        description.attributedText = NSAttributedString(string: "Description", attributes: [.font : UIFont.boldSystemFont(ofSize: 20), .foregroundColor : UIColor.white])
+        return description
+    }()
+    
     let movieOverview : UILabel = {
         let content = UILabel()
         content.translatesAutoresizingMaskIntoConstraints = false
@@ -51,11 +74,15 @@ class MovieDetailsStackView : UIView{
     }
     
     func setGenreText(text : String) {
-        genres.attributedText = NSAttributedString(string: text, attributes: [.font : UIFont.boldSystemFont(ofSize: 18), .foregroundColor : UIColor.white])
+        genres.attributedText = NSAttributedString(string: text, attributes: [.font : UIFont.systemFont(ofSize: 18), .foregroundColor : UIColor.white])
+    }
+    
+    func setDescriptionText(text : String) {
+        quoteText.attributedText = NSAttributedString(string: text, attributes: [.font : UIFont.systemFont(ofSize: 18), .foregroundColor : UIColor.white])
     }
     
     func setContentText(text : String) {
-        movieOverview.attributedText = NSAttributedString(string: text, attributes: [.font : UIFont.boldSystemFont(ofSize: 18), .foregroundColor : UIColor.white])
+        movieOverview.attributedText = NSAttributedString(string: text, attributes: [.font : UIFont.systemFont(ofSize: 18), .foregroundColor : UIColor.white])
     }
     
     required init?(coder: NSCoder) {
@@ -65,6 +92,9 @@ class MovieDetailsStackView : UIView{
     func setupViews() {
         stackview.addArrangedSubview(movieTitle)
         stackview.addArrangedSubview(genres)
+        stackview.addArrangedSubview(quote)
+        stackview.addArrangedSubview(quoteText)
+        stackview.addArrangedSubview(descriptionLabel)
         stackview.addArrangedSubview(movieOverview)
         self.addSubview(stackview)
     }

@@ -53,7 +53,8 @@ class MovieDetailsViewController : UIViewController {
     func setupCurrentMovie() {
         imageview.setImageFromUrl(url: Constants.imageBaseUrl + Constants.defaultPictureSize + viewModel.movie.posterPath)
         movieDetailsStackView.setTitleText(title: viewModel.movie.title)
-        movieDetailsStackView.setGenreText(text: viewModel.movie.releaseDate)
+        movieDetailsStackView.setGenreText(text: viewModel.genres)
+        movieDetailsStackView.setDescriptionText(text: viewModel.quote)
         movieDetailsStackView.setContentText(text: viewModel.movie.overview)
         watchedButton.button.addTarget(self, action: #selector(toggleWatched), for: .touchUpInside)
         favoriteButton.button.addTarget(self, action: #selector(toggleFavorite), for: .touchUpInside)
@@ -84,6 +85,17 @@ class MovieDetailsViewController : UIViewController {
             guard let strongSelf = self else { return }
             strongSelf.setupCurrentMovie()
         }
+        viewModel.isLoading = { isLoading in
+            if isLoading {
+                print("Showing Loader")
+            } else {
+                print("Dismissing Loader")
+            }
+        }
+        
+        viewModel.gotError = { error in
+            print(error.localizedDescription)
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -93,7 +105,7 @@ class MovieDetailsViewController : UIViewController {
     override func loadView() {
         super.loadView()
         setupViewModel()
-        view.backgroundColor = .darkGray
+        view.backgroundColor = UIColor(red: 0.17, green: 0.17, blue: 0.18, alpha: 1.0)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -102,7 +114,7 @@ class MovieDetailsViewController : UIViewController {
         //        navigationController?.navigationBar.barTintColor = .systemGray6
         //        navigationController?.hidesBarsOnSwipe = true
         
-        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: watchedButton), UIBarButtonItem(customView: favoriteButton)]
+        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: watchedButton), UIBarButtonItem(customView: UIButton()), UIBarButtonItem(customView: favoriteButton)]
     }
     
     override func viewDidLoad() {

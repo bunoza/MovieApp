@@ -8,20 +8,22 @@
 import Foundation
 
 class MovieDetailsViewModel {
-
-    var movie: MovieItem
-    let defaults = UserDefaults.standard
-
-
-    var dataReady: (() -> ())?
     
+    var movie: MovieItem
+    var movieDetails : [MovieDetails] = []
+    let defaults = UserDefaults.standard
+    let repository = Repository()
+    var genres : String
+    var quote : String
+    
+    var isLoading: ((Bool) -> ())?
+    var dataReady: (() -> ())?
+    var gotError: ((NetworkError) -> ())?
     
     init(movie: MovieItem) {
         self.movie = movie
-    }
-    
-    func ready() {
-        dataReady?()
+        self.genres = ""
+        self.quote = ""
     }
     
     func watchedToggle(){
@@ -51,6 +53,36 @@ class MovieDetailsViewModel {
             defaults.set(favourite, forKey: "favorites")
             movie.isWatched = true
             print("Favorites:  \(favourite)")
+        }
+    }
+    
+    func ready() {
+        ///begin loading
+        isLoading?(true)
+        
+        repository.getMovieDetails(movieID: movie.id) { [weak self] result in
+            guard let strongSelf = self else { return }
+            
+            ///stop loading
+            strongSelf.isLoading?(false)
+            
+            switch result {
+            case .success(let movies):
+                ///success loading data, notify VC
+                strongSelf.movieDetails.append(movies)
+                let watched = strongSelf.defaults.object(forKey: "watched") as? [Int] ?? [Int]()
+                let favorites = strongSelf.defaults.object(forKey: "favorites") as? [Int] ?? [Int]()
+                for genre in movies.genres {
+                    strongSelf.genres.append(genre.name + ", ")
+                }
+                strongSelf.genres = String(strongSelf.genres.dropLast())
+                strongSelf.genres = String(strongSelf.genres.dropLast())
+                strongSelf.quote = "\"" + movies.tagline + "\""
+                strongSelf.dataReady?()
+            case .failure(let error):
+                ///got error
+                strongSelf.gotError?(error)
+            }
         }
     }
 }
