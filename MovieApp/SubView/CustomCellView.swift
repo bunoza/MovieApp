@@ -73,8 +73,21 @@ class CustomCellView: UITableViewCell {
         buttonStack.axis = .horizontal
         buttonStack.spacing = 15
         buttonStack.distribution = .fillProportionally
-        buttonStack.alignment = .trailing
         return buttonStack
+    }()
+    
+    let placeHolderButtonLeft: UIButton = {
+        let placeHolderButtonLeft = UIButton()
+        placeHolderButtonLeft.translatesAutoresizingMaskIntoConstraints = false
+        placeHolderButtonLeft.isUserInteractionEnabled = false
+        return placeHolderButtonLeft
+    }()
+    
+    let placeHolderButtonRight: UIButton = {
+        let placeHolderButtonRight = UIButton()
+        placeHolderButtonRight.translatesAutoresizingMaskIntoConstraints = false
+        placeHolderButtonRight.isUserInteractionEnabled = false
+        return placeHolderButtonRight
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -84,8 +97,8 @@ class CustomCellView: UITableViewCell {
         stackview.addArrangedSubview(image)
         stackview.addArrangedSubview(textContent)
         textContent.addArrangedSubview(buttonStack)
-        buttonStack.addArrangedSubview(UIButton())
-        buttonStack.addArrangedSubview(UIButton())
+        buttonStack.addArrangedSubview(placeHolderButtonLeft)
+        buttonStack.addArrangedSubview(placeHolderButtonRight)
         buttonStack.addArrangedSubview(favoriteButton)
         buttonStack.addArrangedSubview(watchedButton)
         contentView.addSubview(stackview)

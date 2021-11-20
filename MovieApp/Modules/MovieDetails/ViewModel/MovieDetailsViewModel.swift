@@ -70,8 +70,7 @@ class MovieDetailsViewModel {
             case .success(let movies):
                 ///success loading data, notify VC
                 strongSelf.movieDetails.append(movies)
-                let watched = strongSelf.defaults.object(forKey: "watched") as? [Int] ?? [Int]()
-                let favorites = strongSelf.defaults.object(forKey: "favorites") as? [Int] ?? [Int]()
+                
                 for genre in movies.genres {
                     strongSelf.genres.append(genre.name + ", ")
                 }
