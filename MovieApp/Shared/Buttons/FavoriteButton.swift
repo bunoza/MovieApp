@@ -39,6 +39,7 @@ class FavoriteButton : UIView {
     }
     
     func turnOff() {
+        print("turned off")
         button.setImage(UIImage(named: "star_unfilled"), for: .normal)
     }
     

@@ -27,7 +27,7 @@ class MovieDetailsStackView : UIView{
         let quote = UILabel()
         quote.translatesAutoresizingMaskIntoConstraints = false
         quote.numberOfLines = 0
-        quote.attributedText = NSAttributedString(string: "Quote", attributes: [.font : UIFont.boldSystemFont(ofSize: 20), .foregroundColor : UIColor.white])
+        quote.attributedText = NSAttributedString(string: "Quote", attributes: [.font : UIFont.boldSystemFont(ofSize: 25), .foregroundColor : UIColor.white])
         return quote
     }()
     
@@ -42,7 +42,7 @@ class MovieDetailsStackView : UIView{
         let description = UILabel()
         description.translatesAutoresizingMaskIntoConstraints = false
         description.numberOfLines = 0
-        description.attributedText = NSAttributedString(string: "Description", attributes: [.font : UIFont.boldSystemFont(ofSize: 20), .foregroundColor : UIColor.white])
+        description.attributedText = NSAttributedString(string: "Description", attributes: [.font : UIFont.boldSystemFont(ofSize: 25), .foregroundColor : UIColor.white])
         return description
     }()
     
@@ -70,7 +70,7 @@ class MovieDetailsStackView : UIView{
     }
     
     func setTitleText(title : String) {
-        movieTitle.attributedText = NSAttributedString(string: title, attributes: [.font : UIFont.boldSystemFont(ofSize: 20), .foregroundColor : UIColor.white])
+        movieTitle.attributedText = NSAttributedString(string: title, attributes: [.font : UIFont.boldSystemFont(ofSize: 25), .foregroundColor : UIColor.white])
     }
     
     func setGenreText(text : String) {

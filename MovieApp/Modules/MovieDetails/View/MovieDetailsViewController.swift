@@ -10,10 +10,11 @@ import UIKit
 class MovieDetailsViewController : UIViewController {
     
     let viewModel : MovieDetailsViewModel
-    
+
     let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.contentInset = UIEdgeInsets(top: -90, left: 0, bottom: 0, right: 0)
         return scrollView
     }()
     
@@ -22,7 +23,7 @@ class MovieDetailsViewController : UIViewController {
         imageview.translatesAutoresizingMaskIntoConstraints = false
         return imageview
     }()
-    
+        
     let watchedButton : WatchedButton = {
         let watchedButton = WatchedButton()
         return watchedButton
@@ -105,18 +106,17 @@ class MovieDetailsViewController : UIViewController {
     override func loadView() {
         super.loadView()
         setupViewModel()
+
         view.backgroundColor = UIColor(red: 0.17, green: 0.17, blue: 0.18, alpha: 1.0)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = false
-        //        navigationController?.navigationBar.barTintColor = .systemGray6
-        //        navigationController?.hidesBarsOnSwipe = true
-        
+        self.navigationController?.navigationBar.isTranslucent = true
         navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: watchedButton), UIBarButtonItem(customView: UIButton()), UIBarButtonItem(customView: favoriteButton)]
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController!.navigationBar.setBackgroundImage(UIImage(), for: .default)
@@ -124,8 +124,8 @@ class MovieDetailsViewController : UIViewController {
         self.navigationController!.navigationBar.isTranslucent = true
         setupViews()
         setupConstraints()
-        configureNavigationBar(title: viewModel.movie.title)
         viewModel.ready()
+        
     }
     
     func setupViews() {
@@ -133,21 +133,8 @@ class MovieDetailsViewController : UIViewController {
         scrollView.addSubview(contentView)
         contentView.addSubview(imageview)
         contentView.addSubview(movieDetailsStackView)
-        
         contentView.insertSubview(watchedButton, aboveSubview: imageview)
         contentView.insertSubview(favoriteButton, aboveSubview: imageview)
-    }
-    
-    func configureNavigationBar(title : String) {
-        //        self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white, .font : UIFont.init(name: "Avenir Next Condensed Bold", size: 20)!]
-        //        self.navigationItem.title = title
-        //        let appearance = UINavigationBarAppearance()
-        //        appearance.configureWithTransparentBackground()
-        //        appearance.backgroundColor = .systemGray6
-        ////         promjeni boju
-        //        self.navigationController?.navigationBar.standardAppearance = appearance;
-        //        self.navigationController?.navigationBar.scrollEdgeAppearance = self.navigationController?.navigationBar.standardAppearance
-        
     }
     
     func setupConstraints(){
@@ -155,21 +142,21 @@ class MovieDetailsViewController : UIViewController {
             make.top.equalTo(view)
             make.bottom.equalTo(view)
             make.width.equalTo(view)
-            make.height.equalTo(view)
         }
         imageview.snp.makeConstraints { make in
             make.height.lessThanOrEqualTo(550)
             make.width.equalToSuperview()
+            make.top.equalTo(contentView)
         }
         movieDetailsStackView.snp.makeConstraints { make in
             make.top.equalTo(imageview.snp.bottom)
+            make.bottom.equalTo(contentView.snp.bottom)
             make.width.equalToSuperview()
         }
         contentView.snp.makeConstraints { (make) in
             make.top.equalTo(scrollView)
             make.bottom.equalTo(scrollView)
             make.width.equalTo(scrollView)
-            make.height.equalTo(scrollView)
         }
     }
 }
