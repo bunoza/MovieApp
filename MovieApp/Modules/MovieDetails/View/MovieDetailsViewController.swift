@@ -14,14 +14,14 @@ class MovieDetailsViewController : UIViewController {
     let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.contentInset = UIEdgeInsets(top: -90, left: 0, bottom: 0, right: 0)
+        scrollView.contentInset = UIEdgeInsets(top: -95, left: 0, bottom: 0, right: 0)
         return scrollView
     }()
     
-    let imageview : UIImageView = {
-        let imageview = UIImageView()
-        imageview.translatesAutoresizingMaskIntoConstraints = false
-        return imageview
+    let imageGradient : ImageGradient = {
+        let imageGradient = ImageGradient()
+        imageGradient.translatesAutoresizingMaskIntoConstraints = false
+        return imageGradient
     }()
         
     let watchedButton : WatchedButton = {
@@ -52,7 +52,7 @@ class MovieDetailsViewController : UIViewController {
     }
     
     func setupCurrentMovie() {
-        imageview.setImageFromUrl(url: Constants.imageBaseUrl + Constants.defaultPictureSize + viewModel.movie.posterPath)
+        imageGradient.configureImageGradient(imageURL: Constants.imageBaseUrl + Constants.defaultPictureSize + viewModel.movie.posterPath)
         movieDetailsStackView.setTitleText(title: viewModel.movie.title)
         movieDetailsStackView.setGenreText(text: viewModel.genres)
         movieDetailsStackView.setDescriptionText(text: viewModel.quote)
@@ -88,9 +88,9 @@ class MovieDetailsViewController : UIViewController {
         }
         viewModel.isLoading = { isLoading in
             if isLoading {
-                print("Showing Loader")
+                self.showOverlay(on: self)
             } else {
-                print("Dismissing Loader")
+                self.dismissOverlay(on: self)
             }
         }
         
@@ -131,10 +131,10 @@ class MovieDetailsViewController : UIViewController {
     func setupViews() {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        contentView.addSubview(imageview)
+        contentView.addSubview(imageGradient)
         contentView.addSubview(movieDetailsStackView)
-        contentView.insertSubview(watchedButton, aboveSubview: imageview)
-        contentView.insertSubview(favoriteButton, aboveSubview: imageview)
+        contentView.insertSubview(watchedButton, aboveSubview: imageGradient)
+        contentView.insertSubview(favoriteButton, aboveSubview: imageGradient)
     }
     
     func setupConstraints(){
@@ -143,13 +143,13 @@ class MovieDetailsViewController : UIViewController {
             make.bottom.equalTo(view)
             make.width.equalTo(view)
         }
-        imageview.snp.makeConstraints { make in
+        imageGradient.snp.makeConstraints { make in
             make.height.lessThanOrEqualTo(550)
             make.width.equalToSuperview()
             make.top.equalTo(contentView)
         }
         movieDetailsStackView.snp.makeConstraints { make in
-            make.top.equalTo(imageview.snp.bottom)
+            make.top.equalTo(imageGradient.snp.bottom)
             make.bottom.equalTo(contentView.snp.bottom)
             make.width.equalToSuperview()
         }

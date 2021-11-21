@@ -79,6 +79,9 @@ class MovieDetailsStackView : UIView{
     
     func setDescriptionText(text : String) {
         quoteText.attributedText = NSAttributedString(string: text, attributes: [.font : UIFont.systemFont(ofSize: 18), .foregroundColor : UIColor.white])
+        if text == "\"\"" {
+            quoteText.attributedText = NSAttributedString(string: "No quote", attributes: [.font : UIFont.systemFont(ofSize: 18), .foregroundColor : UIColor.white])
+        }
     }
     
     func setContentText(text : String) {
