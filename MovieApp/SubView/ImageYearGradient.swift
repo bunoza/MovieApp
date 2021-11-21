@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import Kingfisher
 
 class ImageYearGradient : UIView {
     
@@ -68,8 +69,11 @@ class ImageYearGradient : UIView {
     }
     
     func configureImageYearGradient(imageURL: String, year: String) {
-        imageView.setImageFromUrl(url: imageURL)
-        imageView = addGradient(toImage: imageView)
+        let onImageSet : (Result<RetrieveImageResult, KingfisherError>) -> ()
+        onImageSet = { result in
+            self.imageView = self.addGradient(toImage: self.imageView)
+        }
+        imageView.setImageFromUrlwithCompletion(url: imageURL, completion: onImageSet)
         yearLabel.attributedText = NSAttributedString(string: String(year.prefix(4)), attributes: [.font : UIFont.boldSystemFont(ofSize: 15), .foregroundColor : UIColor.white])
     }
 }

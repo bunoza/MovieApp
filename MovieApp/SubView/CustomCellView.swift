@@ -15,15 +15,7 @@ class CustomCellView: UITableViewCell {
     
     var watchedClicked: (() -> ())?
     var favouriteClicked: (() -> ())?
-    ///TO BE REPLACED WITH IMAGEYEARGRADIENT
-//    var image : UIImageView = {
-//        let image = UIImageView()
-//        image.translatesAutoresizingMaskIntoConstraints = false
-//        image.clipsToBounds = true
-//        image.layer.cornerRadius = 10
-//        image.sizeToFit()
-//        return image
-//    }()
+
     let imageYearGradient : ImageYearGradient = {
         let imageYearGradient = ImageYearGradient()
         imageYearGradient.translatesAutoresizingMaskIntoConstraints = false
