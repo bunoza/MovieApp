@@ -7,6 +7,7 @@
 
 import Foundation
 import Alamofire
+import Combine
 
 public class RestManager {
     private static let manager: Alamofire.Session = {
@@ -17,22 +18,37 @@ public class RestManager {
         return sessionManager
     }()
     
-    public static func fetch<T: Codable>(url: String, completionHandler: @escaping (Result<T, NetworkError>) -> () ) {
-        let request = RestManager.manager
-            .request(url, encoding: URLEncoding.default)
-            .validate()
-            .responseData { response in
-                switch response.result {
-                case .success(let data):
-                    if let decodedObject: T = SerializationManager.parseData(jsonData: data) {
-                        completionHandler(.success(decodedObject))
-                    } else {
-                        completionHandler(.failure(.parseFailed))
-                    }
-                case .failure(_):
-                    completionHandler(.failure(.generalError))
-                }
+    public static func fetch <T: Codable>(url: String) -> AnyPublisher<Result<T, NetworkError>, Never> {
+        return Future { promise in
+            guard let encodedUrl = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
+                return promise(.success(.failure(.invalidUrl)))
             }
-        request.resume()
+            let request = RestManager.manager
+                .request(encodedUrl, encoding: URLEncoding.default)
+                .validate()
+                .responseData { (response) in
+                    switch response.result {
+                    case .success(let value):
+                        if let decodedObject: T = SerializationManager.parseData(jsonData: value) {
+                            promise(.success(.success(decodedObject)))
+                        } else {
+                            promise(.success(.failure(.parseFailed)))
+                        }
+                    case .failure(let error):
+                        if let urlError = error.underlyingError as? URLError {
+                            switch urlError.code {
+                            case .timedOut, .notConnectedToInternet, .networkConnectionLost:
+                                promise(.success(.failure(.notConnectedToInternet)))
+                            default:
+                                promise(.success(.failure(.generalError)))
+                            }
+                        } else {
+                            promise(.success(.failure(.generalError)))
+                        }
+                        
+                    }
+                }
+            request.resume()
+        }.eraseToAnyPublisher()
     }
 }

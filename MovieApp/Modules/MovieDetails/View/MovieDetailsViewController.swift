@@ -6,11 +6,14 @@
 //
 
 import UIKit
+import Combine
 
 class MovieDetailsViewController : UIViewController {
     
     let viewModel : MovieDetailsViewModel
-
+    
+    var observers = Set<AnyCancellable>()
+    
     let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -23,7 +26,7 @@ class MovieDetailsViewController : UIViewController {
         imageGradient.translatesAutoresizingMaskIntoConstraints = false
         return imageGradient
     }()
-        
+    
     let watchedButton : WatchedButton = {
         let watchedButton = WatchedButton()
         return watchedButton
@@ -81,21 +84,35 @@ class MovieDetailsViewController : UIViewController {
         viewModel.favouriteToggle()
     }
     
-    func setupViewModel() {
-        viewModel.dataReady = { [weak self] in
-            guard let strongSelf = self else { return }
-            strongSelf.setupCurrentMovie()
-        }
-        viewModel.isLoading = { isLoading in
-            if isLoading {
-                self.showOverlay(on: self)
-            } else {
-                self.dismissOverlay(on: self)
-            }
-        }
+    func setupBindings() {
+        viewModel.setupBindings().store(in: &observers)
         
-        viewModel.gotError = { error in
-            print(error.localizedDescription)
+        viewModel.output.outputSubject
+            .subscribe(on: DispatchQueue.global(qos: .background))
+            .receive(on: RunLoop.main)
+            .sink { [weak self] outputActions in
+                for action in outputActions {
+                    self?.handle(action)
+                    print("Action: \(action)")
+                }
+            }
+            .store(in: &observers)
+    }
+    
+    func handle(_ action: MovieListOutput) {
+        switch action {
+        case .dataReady:
+            self.setupCurrentMovie()
+            print("setup current movie")
+        case .showLoader(let showLoader):
+            if showLoader {
+                showOverlay(on: self)
+            } else {
+                dismissOverlay(on: self)
+            }
+        case.gotError(let message):
+            showErrorAlert(on: self)
+            print(message)
         }
     }
     
@@ -105,8 +122,8 @@ class MovieDetailsViewController : UIViewController {
     
     override func loadView() {
         super.loadView()
-        setupViewModel()
-
+        setupBindings()
+        
         view.backgroundColor = UIColor(red: 0.17, green: 0.17, blue: 0.18, alpha: 1.0)
     }
     
@@ -116,7 +133,7 @@ class MovieDetailsViewController : UIViewController {
         self.navigationController?.navigationBar.isTranslucent = true
         navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: watchedButton), UIBarButtonItem(customView: UIButton()), UIBarButtonItem(customView: favoriteButton)]
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController!.navigationBar.setBackgroundImage(UIImage(), for: .default)
@@ -124,8 +141,6 @@ class MovieDetailsViewController : UIViewController {
         self.navigationController!.navigationBar.isTranslucent = true
         setupViews()
         setupConstraints()
-        viewModel.ready()
-        
     }
     
     func setupViews() {
@@ -159,4 +174,7 @@ class MovieDetailsViewController : UIViewController {
             make.width.equalTo(scrollView)
         }
     }
+    
+    
+    
 }

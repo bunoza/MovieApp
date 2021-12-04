@@ -57,7 +57,6 @@ class ImageGradient : UIView {
     func configureImageGradient(imageURL: String) {
         let onImageSet : (Result<RetrieveImageResult, KingfisherError>) -> ()
         onImageSet = { result in
-            print("gradient added")
             self.imageView = self.addGradient(toImage: self.imageView)
             self.imageView.setNeedsLayout()
             self.imageView.layoutIfNeeded()
