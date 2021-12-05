@@ -14,9 +14,10 @@ class ImageYearGradient : UIView {
     var imageView : UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 10
-        imageView.sizeToFit()
+//        imageView.sizeToFit()
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
         return imageView
     }()
     

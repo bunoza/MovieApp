@@ -15,7 +15,6 @@ class ImageGradient : UIView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.clipsToBounds = true
-        imageView.sizeToFit()
         return imageView
     }()
     

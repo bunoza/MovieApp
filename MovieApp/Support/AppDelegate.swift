@@ -14,9 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) ->Bool{
         
-        let viewModel = MovieListViewModel()
-        let viewController = MovieListViewController(viewModel: viewModel)
-        let navigationViewController = UINavigationController(rootViewController: viewController)
+        let navigationViewController = UINavigationController(rootViewController: TabViewController())
                 
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.rootViewController = navigationViewController

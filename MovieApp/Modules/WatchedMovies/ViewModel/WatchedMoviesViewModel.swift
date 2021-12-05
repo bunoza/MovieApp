@@ -1,65 +1,50 @@
 //
-//  MovieDetailsViewModel.swift
+//  WatchedMoviesViewModel.swift
 //  MovieApp
 //
-//  Created by Domagoj Bunoza on 08.10.2021..
+//  Created by Domagoj Bunoza on 04.12.2021..
 //
 
 import Foundation
 import Combine
 
-struct OutputDetails {
-    var screenData: [MovieDetails]
-    var outputActions: [MovieListOutput]
-    let outputSubject: PassthroughSubject<[MovieListOutput], Never>
-}
-
-class MovieDetailsViewModel {
+class WatchedMoviesViewModel {
     
     var input = CurrentValueSubject<MovieListInput, Never>(.loading(showLoader: true))
-    var output : OutputDetails
     
-    var movie: MovieItem
+    let repository : Repository
     let defaults = UserDefaults.standard
-    let repository = Repository()
-    var genres : String
-    var quote : String
+    var output : Output
     
-    init(movie: MovieItem) {
-        self.movie = movie
-        self.genres = ""
-        self.quote = ""
-        output = OutputDetails(screenData: [],
-                               outputActions: [],
-                               outputSubject: PassthroughSubject<[MovieListOutput], Never>())
+    init(){
+        repository = Repository()
+        output = Output(screenData: [],
+                        outputActions: [],
+                        outputSubject: PassthroughSubject<[MovieListOutput], Never>())
     }
     
-    func watchedToggle(){
+    func watchedToggle(value : MovieItem){
         var watched = defaults.object(forKey: "watched") as? [Int] ?? [Int]()
-        if watched.contains(movie.id) {
-            watched = watched.filter {$0 != movie.id}
+        if watched.contains(value.id) {
+            watched = watched.filter {$0 != value.id}
             defaults.set(watched, forKey: "watched")
-            movie.isWatched = false
             print("Watched:  \(watched)")
         } else {
-            watched.append(movie.id)
+            watched.append(value.id)
             defaults.set(watched, forKey: "watched")
-            movie.isWatched = true
             print("Watched:  \(watched)")
         }
     }
     
-    func favouriteToggle(){
+    func favouriteToggle(value : MovieItem){
         var favourite = defaults.object(forKey: "favorites") as? [Int] ?? [Int]()
-        if favourite.contains(movie.id) {
-            favourite = favourite.filter {$0 != movie.id}
+        if favourite.contains(value.id) {
+            favourite = favourite.filter {$0 != value.id}
             defaults.set(favourite, forKey: "favorites")
-            movie.isFavourite = false
             print("Favorites:  \(favourite)")
         } else {
-            favourite.append(movie.id)
+            favourite.append(value.id)
             defaults.set(favourite, forKey: "favorites")
-            movie.isFavourite = true
             print("Favorites:  \(favourite)")
         }
     }
@@ -86,17 +71,20 @@ class MovieDetailsViewModel {
             }
     }
     
+//    func getWatchedMovies() -> AnyPublisher<[MovieItem], Never> {
+//        return AnyPublisher<[MovieItem], Never>(defaults.object(forKey: "watched") as? [MovieItem] ?? [MovieItem]())
+//    }
     
     func handleLoadScreenData(_ showLoader: Bool) -> AnyPublisher<[MovieListOutput], Never> {
         var outputActions = [MovieListOutput]()
-        return repository.getMovieDetails(movieID: movie.id)
-            .map({ [unowned self] responseResult -> Result<[MovieDetails], NetworkError> in
+        return repository.getMoviesList()
+            .map({ [unowned self] responseResult -> Result<[MovieItem], NetworkError> in
                 //self.output.outputActions.append(.showLoader(showLoader))
                 self.output.outputSubject.send([.showLoader(showLoader)])
                 switch responseResult {
                 case .success(let response):
-                    let screenData = self.createScreenData(from: response)
-                    return .success([screenData])
+                    let screenData = self.createScreenData(from: response.results)
+                    return .success(screenData)
                 case .failure(let error):
                     return .failure(error)
                 }
@@ -118,14 +106,25 @@ class MovieDetailsViewModel {
             }.eraseToAnyPublisher()
     }
     
-    func createScreenData(from response: MovieDetails) -> MovieDetails {
-        for genre in response.genres {
-            self.genres.append(genre.name + ", ")
+    func createScreenData(from response: [Movie]) -> [MovieItem] {
+        var temp = [MovieItem]()
+        if response.isEmpty {
+            return temp
         }
-        self.genres = String(self.genres.dropLast())
-        self.genres = String(self.genres.dropLast())
-        self.quote = "\"" + response.tagline + "\""
+        let watched = defaults.object(forKey: "watched") as? [Int] ?? [Int]()
+        let favorites = defaults.object(forKey: "favorites") as? [Int] ?? [Int]()
         
-        return response
+        temp = response.map({
+            movie in
+            return MovieItem(id: movie.id,
+                             title: movie.title,
+                             overview: movie.overview,
+                             posterPath: movie.posterPath,
+                             releaseDate: movie.releaseDate,
+                             isFavourite: favorites.contains(movie.id) ? true : false,
+                             isWatched: watched.contains(movie.id) ? true : false)
+        })
+        return temp
     }
 }
+

@@ -1,18 +1,20 @@
 //
-//  ViewController.swift
+//  FavoriteMoviesViewController.swift
 //  MovieApp
 //
-//  Created by Domagoj Bunoza on 04.10.2021..
+//  Created by Domagoj Bunoza on 04.12.2021..
 //
 
 import UIKit
 import SnapKit
 import Combine
+import Tabman
 
 
-class MovieListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIViewControllerTransitioningDelegate {
+class FavoriteMoviesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIViewControllerTransitioningDelegate {
     
-    let viewModel : MovieListViewModel
+    let viewModel : FavoriteMoviesViewModel
+
     var observers = Set<AnyCancellable>()
     
     let tableView : UITableView = {
@@ -23,7 +25,7 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
         return tableView
     }()
     
-    init(viewModel: MovieListViewModel) {
+    init(viewModel: FavoriteMoviesViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
