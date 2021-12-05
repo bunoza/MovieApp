@@ -24,29 +24,78 @@ class WatchedMoviesViewModel {
     }
     
     func watchedToggle(value : MovieItem){
-        var watched = defaults.object(forKey: "watched") as? [Int] ?? [Int]()
-        if watched.contains(value.id) {
-            watched = watched.filter {$0 != value.id}
-            defaults.set(watched, forKey: "watched")
-            print("Watched:  \(watched)")
-        } else {
-            watched.append(value.id)
-            defaults.set(watched, forKey: "watched")
-            print("Watched:  \(watched)")
+        var watched = [MovieItem]()
+                
+        do {
+            //get
+            guard let decoded  = defaults.object(forKey: "watched") as? Data
+            else {
+                watched.append(value)
+                let encoded = try NSKeyedArchiver.archivedData(withRootObject: watched, requiringSecureCoding: false)
+                defaults.set(encoded, forKey: "watched")
+                return
+            }
+            var decodedWatched = try NSKeyedUnarchiver.unarchivedArrayOfObjects(ofClass: MovieItem.self, from: decoded)
+            var decodedIds = [Int]()
+            
+            for movieID in decodedWatched! {
+                decodedIds.append(movieID.id)
+            }
+            if decodedIds.contains(value.id) {
+                decodedWatched = decodedWatched?.filter({$0.id != value.id})
+                decodedIds = decodedIds.filter({$0 != value.id})
+            }
+            else {
+                decodedWatched?.append(value)
+                decodedIds.append(value.id)
+            }
+            print("Watched ids: \(decodedIds)")
+            
+            let encoded = try NSKeyedArchiver.archivedData(withRootObject: decodedWatched!, requiringSecureCoding: false)
+            defaults.set(encoded, forKey: "watched")
+
+        }
+        catch {
+            print(error)
         }
     }
     
     func favouriteToggle(value : MovieItem){
-        var favourite = defaults.object(forKey: "favorites") as? [Int] ?? [Int]()
-        if favourite.contains(value.id) {
-            favourite = favourite.filter {$0 != value.id}
-            defaults.set(favourite, forKey: "favorites")
-            print("Favorites:  \(favourite)")
-        } else {
-            favourite.append(value.id)
-            defaults.set(favourite, forKey: "favorites")
-            print("Favorites:  \(favourite)")
+        var favourites = [MovieItem]()
+                
+        do {
+            //get
+            guard let decoded  = defaults.object(forKey: "favorites") as? Data
+            else {
+                favourites.append(value)
+                let encoded = try NSKeyedArchiver.archivedData(withRootObject: favourites, requiringSecureCoding: false)
+                defaults.set(encoded, forKey: "favorites")
+                return
+            }
+            var decodedFavorites = try NSKeyedUnarchiver.unarchivedArrayOfObjects(ofClass: MovieItem.self, from: decoded)
+            var decodedIds = [Int]()
+            
+            for movieID in decodedFavorites! {
+                decodedIds.append(movieID.id)
+            }
+            if decodedIds.contains(value.id) {
+                decodedFavorites = decodedFavorites?.filter({$0.id != value.id})
+                decodedIds = decodedIds.filter({$0 != value.id})
+            }
+            else {
+                decodedFavorites?.append(value)
+                decodedIds.append(value.id)
+            }
+            print("Favorites ids: \(decodedIds)")
+            
+            let encoded = try NSKeyedArchiver.archivedData(withRootObject: decodedFavorites!, requiringSecureCoding: false)
+            defaults.set(encoded, forKey: "favorites")
+
         }
+        catch {
+            print(error)
+        }
+
     }
     
     func setupBindings() -> AnyCancellable {
@@ -71,59 +120,52 @@ class WatchedMoviesViewModel {
             }
     }
     
-//    func getWatchedMovies() -> AnyPublisher<[MovieItem], Never> {
-//        return AnyPublisher<[MovieItem], Never>(defaults.object(forKey: "watched") as? [MovieItem] ?? [MovieItem]())
-//    }
-    
     func handleLoadScreenData(_ showLoader: Bool) -> AnyPublisher<[MovieListOutput], Never> {
         var outputActions = [MovieListOutput]()
-        return repository.getMoviesList()
-            .map({ [unowned self] responseResult -> Result<[MovieItem], NetworkError> in
-                //self.output.outputActions.append(.showLoader(showLoader))
-                self.output.outputSubject.send([.showLoader(showLoader)])
-                switch responseResult {
-                case .success(let response):
-                    let screenData = self.createScreenData(from: response.results)
-                    return .success(screenData)
-                case .failure(let error):
-                    return .failure(error)
-                }
-            })
-            .flatMap { [unowned self] responseResult -> AnyPublisher<[MovieListOutput], Never> in
-                outputActions.append(.showLoader(false))
-                self.output.outputSubject.send([.showLoader(false)])
-                switch responseResult {
-                case .success(let screenData):
-                    self.output.screenData = screenData
-                    output.outputActions.append(.dataReady)
-                    self.output.outputSubject.send([.dataReady])
-                    print(output.outputActions)
-                case .failure(let error):
-                    outputActions.append(.gotError(error.localizedDescription))
-                }
-                
-                return Just(outputActions).eraseToAnyPublisher()
-            }.eraseToAnyPublisher()
+        createScreenData()
+        self.output.outputSubject.send([.dataReady])
+
+        return Just(outputActions).eraseToAnyPublisher()
     }
     
-    func createScreenData(from response: [Movie]) -> [MovieItem] {
+    func createScreenData() -> [MovieItem] {
         var temp = [MovieItem]()
-        if response.isEmpty {
-            return temp
+
+        var unarchivedFavorites : [MovieItem] = []
+        var unarchivedWatched : [MovieItem] = []
+
+        do {
+            let decodedFavorites  = defaults.object(forKey: "favorites") as? Data
+            let decodedWatched  = defaults.object(forKey: "watched") as? Data
+            unarchivedFavorites = try NSKeyedUnarchiver.unarchivedArrayOfObjects(ofClass: MovieItem.self, from: decodedFavorites ?? Data())!
+            unarchivedWatched = try NSKeyedUnarchiver.unarchivedArrayOfObjects(ofClass: MovieItem.self, from: decodedWatched ?? Data())!
         }
-        let watched = defaults.object(forKey: "watched") as? [Int] ?? [Int]()
-        let favorites = defaults.object(forKey: "favorites") as? [Int] ?? [Int]()
+        catch {
+        }
+
+        var favoriteIds = [Int]()
+        var watchedIds = [Int]()
+
+        for movieID in unarchivedFavorites {
+            favoriteIds.append(movieID.id)
+        }
+
+        for movieID in unarchivedWatched {
+            watchedIds.append(movieID.id)
+        }
         
-        temp = response.map({
+        temp = unarchivedWatched.map({
             movie in
             return MovieItem(id: movie.id,
                              title: movie.title,
                              overview: movie.overview,
                              posterPath: movie.posterPath,
                              releaseDate: movie.releaseDate,
-                             isFavourite: favorites.contains(movie.id) ? true : false,
-                             isWatched: watched.contains(movie.id) ? true : false)
+                             isFavourite: favoriteIds.contains(movie.id) ? true : false,
+                             isWatched: watchedIds.contains(movie.id) ? true : false)
         })
+        temp = temp.filter({$0.isWatched != false})
+        output.screenData = temp
         return temp
     }
 }

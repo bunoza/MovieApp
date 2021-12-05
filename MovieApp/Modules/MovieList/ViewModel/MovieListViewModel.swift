@@ -165,35 +165,26 @@ class MovieListViewModel {
         if response.isEmpty {
             return temp
         }
-        
+
         var unarchivedFavorites : [MovieItem] = []
         var unarchivedWatched : [MovieItem] = []
 
-        
-        guard let decodedFavorites  = defaults.object(forKey: "favorites") as? Data
-        else {
-            return []
-        }
-        guard let decodedWatched  = defaults.object(forKey: "watched") as? Data
-        else {
-            return []
-        }
-        
         do {
-            unarchivedFavorites = try NSKeyedUnarchiver.unarchivedArrayOfObjects(ofClass: MovieItem.self, from: decodedFavorites)!
-            unarchivedWatched = try NSKeyedUnarchiver.unarchivedArrayOfObjects(ofClass: MovieItem.self, from: decodedWatched)!
+            let decodedFavorites  = defaults.object(forKey: "favorites") as? Data
+            let decodedWatched  = defaults.object(forKey: "watched") as? Data
+            unarchivedFavorites = try NSKeyedUnarchiver.unarchivedArrayOfObjects(ofClass: MovieItem.self, from: decodedFavorites ?? Data())!
+            unarchivedWatched = try NSKeyedUnarchiver.unarchivedArrayOfObjects(ofClass: MovieItem.self, from: decodedWatched ?? Data())!
         }
         catch {
-            
         }
-        
+
         var favoriteIds = [Int]()
         var watchedIds = [Int]()
-        
+
         for movieID in unarchivedFavorites {
             favoriteIds.append(movieID.id)
         }
-        
+
         for movieID in unarchivedWatched {
             watchedIds.append(movieID.id)
         }
