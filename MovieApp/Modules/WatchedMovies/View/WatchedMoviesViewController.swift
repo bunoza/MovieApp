@@ -17,6 +17,8 @@ class WatchedMoviesViewController: UIViewController, UITableViewDelegate, UITabl
 
     var observers = Set<AnyCancellable>()
     
+    private let refreshControl = UIRefreshControl()
+    
     let tableView : UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -79,8 +81,21 @@ class WatchedMoviesViewController: UIViewController, UITableViewDelegate, UITabl
         setupConstraints()
         setupTableView()
         setupBindings()
+        configureRefreshControl()
     }
     
+    func configureRefreshControl() {
+        NotificationCenter.default.addObserver(self, selector: #selector(appMovedToForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+    }
+    
+    @objc func refreshData() {
+        viewModel.input.send(.loading(showLoader: true))
+    }
+    
+    @objc func appMovedToForeground() {
+        viewModel.input.send(.loading(showLoader: true))
+        }
     func setupBindings() {
         viewModel.setupBindings().store(in: &observers)
         
@@ -95,6 +110,7 @@ class WatchedMoviesViewController: UIViewController, UITableViewDelegate, UITabl
             }
             .store(in: &observers)
     }
+    
     
     func handle(_ action: MovieListOutput) {
         switch action {

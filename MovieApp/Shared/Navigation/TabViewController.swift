@@ -9,10 +9,19 @@ import Tabman
 import Pageboy
 
 class TabViewController: TabmanViewController, PageboyViewControllerDataSource, TMBarDataSource {
+    
     func barItem(for bar: TMBar, at index: Int) -> TMBarItemable {
-        let title = "Page \(index)"
-        return TMBarItem(title: title)
-
+        switch index{
+        case 0:
+            return TMBarItem(title: "Watched")
+        case 1:
+            return TMBarItem(title: "Popular")
+        case 2:
+            return TMBarItem(title: "Favorites")
+        default:
+            return TMBarItem(title: "def")
+        }
+        
     }
     
     func numberOfViewControllers(in pageboyViewController: PageboyViewController) -> Int {
@@ -26,7 +35,6 @@ class TabViewController: TabmanViewController, PageboyViewControllerDataSource, 
     func defaultPage(for pageboyViewController: PageboyViewController) -> PageboyViewController.Page? {
         return .at(index: 1)
     }
-    
 
     private var viewControllers = [WatchedMoviesViewController(viewModel: WatchedMoviesViewModel()),
                                    MovieListViewController(viewModel: MovieListViewModel()),

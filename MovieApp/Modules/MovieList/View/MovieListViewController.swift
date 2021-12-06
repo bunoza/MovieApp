@@ -14,6 +14,7 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
     
     let viewModel : MovieListViewModel
     var observers = Set<AnyCancellable>()
+    private let refreshControl = UIRefreshControl()
     
     let tableView : UITableView = {
         let tableView = UITableView()
@@ -93,6 +94,19 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
             }
             .store(in: &observers)
     }
+    
+    func configureRefreshControl() {
+        NotificationCenter.default.addObserver(self, selector: #selector(appMovedToForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+    }
+    
+    @objc func refreshData() {
+        viewModel.input.send(.loading(showLoader: true))
+    }
+    
+    @objc func appMovedToForeground() {
+        viewModel.input.send(.loading(showLoader: true))
+        }
     
     func handle(_ action: MovieListOutput) {
         switch action {
