@@ -55,7 +55,7 @@ class WatchedMoviesViewController: UIViewController, UITableViewDelegate, UITabl
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        viewModel.input.send(.loading(showLoader: true))
         navigationController?.navigationBar.isHidden = true
         navigationController?.toolbar.isHidden = true
     }

@@ -147,7 +147,7 @@ class MovieListViewModel {
                 switch responseResult {
                 case .success(let screenData):
                     self.output.screenData = screenData
-                    output.outputActions.append(.dataReady)
+//                    output.outputActions.append(.dataReady)
                     self.output.outputSubject.send([.dataReady])
                     print(output.outputActions)
                 case .failure(let error):

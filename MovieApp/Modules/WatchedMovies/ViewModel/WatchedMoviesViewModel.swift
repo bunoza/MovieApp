@@ -121,12 +121,14 @@ class WatchedMoviesViewModel {
     }
     
     func handleLoadScreenData(_ showLoader: Bool) -> AnyPublisher<[MovieListOutput], Never> {
-        var outputActions = [MovieListOutput]()
-        createScreenData()
+        let outputActions = [MovieListOutput]()
+        output.screenData = createScreenData()
         self.output.outputSubject.send([.dataReady])
 
         return Just(outputActions).eraseToAnyPublisher()
     }
+
+    
     
     func createScreenData() -> [MovieItem] {
         var temp = [MovieItem]()
@@ -165,7 +167,6 @@ class WatchedMoviesViewModel {
                              isWatched: watchedIds.contains(movie.id) ? true : false)
         })
         temp = temp.filter({$0.isWatched != false})
-        output.screenData = temp
         return temp
     }
 }

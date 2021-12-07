@@ -21,7 +21,6 @@ class TabViewController: TabmanViewController, PageboyViewControllerDataSource, 
         default:
             return TMBarItem(title: "def")
         }
-        
     }
     
     func numberOfViewControllers(in pageboyViewController: PageboyViewController) -> Int {
