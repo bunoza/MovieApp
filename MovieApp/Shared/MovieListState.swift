@@ -13,8 +13,4 @@ enum MovieListInput {
     case error
 }
 
-enum MovieListOutput {
-    case showLoader(Bool)
-    case dataReady
-    case gotError(String)
-}
+

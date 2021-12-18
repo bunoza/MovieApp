@@ -8,6 +8,11 @@
 import Foundation
 import Combine
 
+enum MovieListOutput {
+    case showLoader(Bool)
+    case dataReady
+    case gotError(String)
+}
 
 struct Output {
     var screenData: [MovieItem]
@@ -21,6 +26,7 @@ class MovieListViewModel {
     
     let repository : Repository
     let defaults = UserDefaults.standard
+    let persistance = Database()
     var output : Output
     
     init(){
@@ -163,6 +169,8 @@ class MovieListViewModel {
         if response.isEmpty {
             return temp
         }
+        
+        
 
         var unarchivedFavorites : [MovieItem] = []
         var unarchivedWatched : [MovieItem] = []
