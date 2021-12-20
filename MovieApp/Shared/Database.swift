@@ -12,15 +12,21 @@ class Database {
     let defaults = UserDefaults.standard
     
     func fetchAll() -> [MovieItem] {
-        
         var unarchivedMovies : [MovieItem] = []
-
         do {
             let decodedMovies = defaults.object(forKey: "movies") as? Data
             unarchivedMovies = try NSKeyedUnarchiver.unarchivedArrayOfObjects(ofClass: MovieItem.self, from: decodedMovies ?? Data())!
         }
         catch {}
         return unarchivedMovies
+    }
+    
+    func fetchWatchedIds() -> [Int] {
+        return fetchWatched().map({ return $0.id })
+    }
+    
+    func fetchFavoritesIds() -> [Int] {
+        return fetchFavorites().map({ return $0.id })
     }
     
     func fetchWatched() -> [MovieItem] {
