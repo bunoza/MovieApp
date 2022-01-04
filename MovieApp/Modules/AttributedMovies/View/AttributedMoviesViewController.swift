@@ -11,9 +11,9 @@ import Combine
 import Tabman
 
 
-class FavoriteMoviesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIViewControllerTransitioningDelegate {
+class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIViewControllerTransitioningDelegate {
     
-    let viewModel : FavoriteMoviesViewModel
+    let viewModel : AttributedMoviesViewModel
 
     var observers = Set<AnyCancellable>()
     
@@ -27,7 +27,7 @@ class FavoriteMoviesViewController: UIViewController, UITableViewDelegate, UITab
         return tableView
     }()
     
-    init(viewModel: FavoriteMoviesViewModel) {
+    init(viewModel: AttributedMoviesViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -137,6 +137,13 @@ class FavoriteMoviesViewController: UIViewController, UITableViewDelegate, UITab
         let cell: CustomCellView = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomCellView
         
         cell.configure(with: viewModel.output.screenData[indexPath.row])
+        
+        if viewModel.tag == "watched" {
+            cell.favoriteButton.isHidden = true
+        }
+        else if viewModel.tag == "favorites" {
+            cell.watchedButton.isHidden = true
+        }
         
         let bgColorView = UIView()
         bgColorView.backgroundColor = UIColor(red: 0.13, green: 0.13, blue: 0.14, alpha: 1.0)

@@ -8,44 +8,49 @@
 import Foundation
 import Combine
 
-class FavoriteMoviesViewModel {
+class AttributedMoviesViewModel {
     
     var input = CurrentValueSubject<MovieListInput, Never>(.loading(showLoader: true))
     
     let repository : Repository
     let defaults = UserDefaults.standard
+    let persistance = Database()
     var output : Output
     
-    init(){
+    let tag : String
+    
+    init(tag : String){
         repository = Repository()
         output = Output(screenData: [],
                         outputActions: [],
                         outputSubject: PassthroughSubject<[MovieListOutput], Never>())
-    }
-    
-    func watchedToggle(value : MovieItem){
-        var watched = defaults.object(forKey: "watched") as? [Int] ?? [Int]()
-        if watched.contains(value.id) {
-            watched = watched.filter {$0 != value.id}
-            defaults.set(watched, forKey: "watched")
-            print("Watched:  \(watched)")
-        } else {
-            watched.append(value.id)
-            defaults.set(watched, forKey: "watched")
-            print("Watched:  \(watched)")
-        }
+        self.tag = tag
     }
     
     func favouriteToggle(value : MovieItem){
-        var favourite = defaults.object(forKey: "favorites") as? [Int] ?? [Int]()
-        if favourite.contains(value.id) {
-            favourite = favourite.filter {$0 != value.id}
-            defaults.set(favourite, forKey: "favorites")
-            print("Favorites:  \(favourite)")
-        } else {
-            favourite.append(value.id)
-            defaults.set(favourite, forKey: "favorites")
-            print("Favorites:  \(favourite)")
+        let currentList = persistance.fetchAll()
+        if currentList.map({ return $0.id}).contains(value.id){
+            let existingMovie = currentList.filter({ $0.id == value.id})[0]
+            persistance.remove(movie: value)
+            existingMovie.isFavourite.toggle()
+            persistance.store(movie: existingMovie)
+        }
+        else {
+            value.isFavourite.toggle()
+            persistance.store(movie: value)
+        }
+    }
+    func watchedToggle(value : MovieItem){
+        let currentList = persistance.fetchAll()
+        if currentList.map({ return $0.id}).contains(value.id){
+            let existingMovie = currentList.filter({ $0.id == value.id})[0]
+            persistance.remove(movie: value)
+            existingMovie.isWatched.toggle()
+            persistance.store(movie: existingMovie)
+        }
+        else {
+            value.isWatched.toggle()
+            persistance.store(movie: value)
         }
     }
     
@@ -75,6 +80,8 @@ class FavoriteMoviesViewModel {
     func handleLoadScreenData(_ showLoader: Bool) -> AnyPublisher<[MovieListOutput], Never> {
         var outputActions = [MovieListOutput]()
         return repository.getMoviesList()
+            .subscribe(on: DispatchQueue.global(qos: .background))
+            .receive(on: RunLoop.main)
             .map({ [unowned self] responseResult -> Result<[MovieItem], NetworkError> in
                 //self.output.outputActions.append(.showLoader(showLoader))
                 self.output.outputSubject.send([.showLoader(showLoader)])
@@ -109,28 +116,8 @@ class FavoriteMoviesViewModel {
             return temp
         }
 
-        var unarchivedFavorites : [MovieItem] = []
-        var unarchivedWatched : [MovieItem] = []
-
-        do {
-            let decodedFavorites  = defaults.object(forKey: "favorites") as? Data
-            let decodedWatched  = defaults.object(forKey: "watched") as? Data
-            unarchivedFavorites = try NSKeyedUnarchiver.unarchivedArrayOfObjects(ofClass: MovieItem.self, from: decodedFavorites ?? Data())!
-            unarchivedWatched = try NSKeyedUnarchiver.unarchivedArrayOfObjects(ofClass: MovieItem.self, from: decodedWatched ?? Data())!
-        }
-        catch {
-        }
-
-        var favoriteIds = [Int]()
-        var watchedIds = [Int]()
-
-        for movieID in unarchivedFavorites {
-            favoriteIds.append(movieID.id)
-        }
-
-        for movieID in unarchivedWatched {
-            watchedIds.append(movieID.id)
-        }
+        let favoriteIds = persistance.fetchFavoritesIds()
+        let watchedIds = persistance.fetchWatchedIds()
         
         temp = response.map({
             movie in
@@ -142,7 +129,12 @@ class FavoriteMoviesViewModel {
                              isFavourite: favoriteIds.contains(movie.id) ? true : false,
                              isWatched: watchedIds.contains(movie.id) ? true : false)
         })
-        temp = temp.filter({$0.isFavourite != false})
+        if self.tag == "watched" {
+            temp = temp.filter({$0.isWatched != false})
+        }
+        if self.tag == "favorites" {
+            temp = temp.filter({$0.isFavourite != false})
+        }
         return temp
     }
 }

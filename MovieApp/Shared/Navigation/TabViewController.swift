@@ -35,9 +35,9 @@ class TabViewController: TabmanViewController, PageboyViewControllerDataSource, 
         return .at(index: 1)
     }
 
-    private var viewControllers = [WatchedMoviesViewController(viewModel: WatchedMoviesViewModel()),
+    private var viewControllers = [AttributedMoviesViewController(viewModel: AttributedMoviesViewModel(tag: "watched")),
                                    MovieListViewController(viewModel: MovieListViewModel()),
-                                   FavoriteMoviesViewController(viewModel: FavoriteMoviesViewModel())]
+                                   AttributedMoviesViewController(viewModel: AttributedMoviesViewModel(tag: "favorites"))]
 
     override func viewDidLoad() {
         super.viewDidLoad()
