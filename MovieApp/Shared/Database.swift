@@ -10,7 +10,7 @@ import Foundation
 class Database {
     
     let defaults = UserDefaults.standard
-    
+        
     func fetchAll() -> [MovieItem] {
         var unarchivedMovies : [MovieItem] = []
         do {
@@ -49,12 +49,15 @@ class Database {
     }
     
     func storeAll(movies : [MovieItem]) {
-        for movie in movies {
-            store(movie: movie)
+        do {
+        let encoded = try NSKeyedArchiver.archivedData(withRootObject: movies, requiringSecureCoding: false)
+            defaults.set(encoded, forKey: "movies")
         }
+        catch{}
     }
     
     func remove(movie : MovieItem) {
         storeAll(movies: fetchAll().filter({ $0.id != movie.id }))
+        
     }
 }

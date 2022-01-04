@@ -138,26 +138,32 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
         bgColorView.backgroundColor = UIColor(red: 0.13, green: 0.13, blue: 0.14, alpha: 1.0)
         cell.selectedBackgroundView = bgColorView
         
-        cell.watchedClicked = {
-            self.viewModel.watchedToggle(value: self.viewModel.output.screenData[indexPath.row])
-            if self.viewModel.output.screenData[indexPath.row].isWatched {
-                cell.watchedButton.turnOff()
-                self.viewModel.output.screenData[indexPath.row].isWatched = false
-            } else {
-                cell.watchedButton.turnOn()
-                self.viewModel.output.screenData[indexPath.row].isWatched = true
-            }
-        }
-        cell.favouriteClicked = {
-            self.viewModel.favouriteToggle(value: self.viewModel.output.screenData[indexPath.row])
-            if self.viewModel.output.screenData[indexPath.row].isFavourite {
-                cell.favoriteButton.turnOff()
-                self.viewModel.output.screenData[indexPath.row].isFavourite = false
-            } else {
-                cell.favoriteButton.turnOn()
-                self.viewModel.output.screenData[indexPath.row].isFavourite = true
-            }
-        }
+        cell.watchedButton.button
+            .publisher(for: .touchUpInside)
+            .sink { _ in
+                self.viewModel.watchedToggle(value: self.viewModel.output.screenData[indexPath.row])
+                if self.viewModel.output.screenData[indexPath.row].isWatched {
+                    cell.watchedButton.turnOff()
+                    self.viewModel.output.screenData[indexPath.row].isWatched = false
+                } else {
+                    cell.watchedButton.turnOn()
+                    self.viewModel.output.screenData[indexPath.row].isWatched = true
+                }
+            }.store(in: &observers)
+        
+        cell.favoriteButton.button
+            .publisher(for: .touchUpInside)
+            .sink { _ in
+                self.viewModel.favouriteToggle(value: self.viewModel.output.screenData[indexPath.row])
+                if self.viewModel.output.screenData[indexPath.row].isFavourite {
+                    cell.favoriteButton.turnOff()
+                    self.viewModel.output.screenData[indexPath.row].isFavourite = false
+                } else {
+                    cell.favoriteButton.turnOn()
+                    self.viewModel.output.screenData[indexPath.row].isFavourite = true
+                }
+            }.store(in: &observers)
+        
         if viewModel.output.screenData[indexPath.row].isFavourite {
             cell.favoriteButton.turnOn()
         }
