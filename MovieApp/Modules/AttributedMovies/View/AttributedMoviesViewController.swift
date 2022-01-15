@@ -149,32 +149,17 @@ class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UIT
         bgColorView.backgroundColor = UIColor(red: 0.13, green: 0.13, blue: 0.14, alpha: 1.0)
         cell.selectedBackgroundView = bgColorView
         
-        cell.watchedClicked = {
-            self.viewModel.watchedToggle(value: self.viewModel.output.screenData[indexPath.row])
-            if self.viewModel.output.screenData[indexPath.row].isWatched {
-                cell.watchedButton.turnOff()
-                self.viewModel.output.screenData[indexPath.row].isWatched = false
-            } else {
-                cell.watchedButton.turnOn()
-                self.viewModel.output.screenData[indexPath.row].isWatched = true
-            }
-        }
-        cell.favouriteClicked = {
-            self.viewModel.favouriteToggle(value: self.viewModel.output.screenData[indexPath.row])
-            if self.viewModel.output.screenData[indexPath.row].isFavourite {
-                cell.favoriteButton.turnOff()
-                self.viewModel.output.screenData[indexPath.row].isFavourite = false
-            } else {
-                cell.favoriteButton.turnOn()
-                self.viewModel.output.screenData[indexPath.row].isFavourite = true
-            }
-        }
-        if viewModel.output.screenData[indexPath.row].isFavourite {
-            cell.favoriteButton.turnOn()
-        }
-        if viewModel.output.screenData[indexPath.row].isWatched {
-            cell.watchedButton.turnOn()
-        }
+        cell.watchedButton.button
+            .publisher(for: .touchUpInside)
+            .sink { _ in
+                self.viewModel.watchedToggle(index: indexPath.row)
+            }.store(in: &observers)
+        
+        cell.favoriteButton.button
+            .publisher(for: .touchUpInside)
+            .sink { _ in
+                self.viewModel.favouriteToggle(index: indexPath.row)
+            }.store(in: &observers)
         return cell
     }
     func tableView(_ tableView: UITableView,

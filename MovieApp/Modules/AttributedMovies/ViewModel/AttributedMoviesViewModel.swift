@@ -27,31 +27,18 @@ class AttributedMoviesViewModel {
         self.tag = tag
     }
     
-    func favouriteToggle(value : MovieItem){
-        let currentList = persistance.fetchAll()
-        if currentList.map({ return $0.id}).contains(value.id){
-            let existingMovie = currentList.filter({ $0.id == value.id})[0]
-            persistance.remove(movie: value)
-            existingMovie.isFavourite.toggle()
-            persistance.store(movie: existingMovie)
-        }
-        else {
-            value.isFavourite.toggle()
-            persistance.store(movie: value)
-        }
+    func watchedToggle(index : Int) {
+        output.screenData[index].isWatched.toggle()
+        persistance.remove(movie: output.screenData[index])
+        persistance.store(movie: output.screenData[index])
+        output.outputSubject.send([.dataReady])
     }
-    func watchedToggle(value : MovieItem){
-        let currentList = persistance.fetchAll()
-        if currentList.map({ return $0.id}).contains(value.id){
-            let existingMovie = currentList.filter({ $0.id == value.id})[0]
-            persistance.remove(movie: value)
-            existingMovie.isWatched.toggle()
-            persistance.store(movie: existingMovie)
-        }
-        else {
-            value.isWatched.toggle()
-            persistance.store(movie: value)
-        }
+    
+    func favouriteToggle(index : Int) {
+        output.screenData[index].isFavourite.toggle()
+        persistance.remove(movie: output.screenData[index])
+        persistance.store(movie: output.screenData[index])
+        output.outputSubject.send([.dataReady])
     }
     
     func setupBindings() -> AnyCancellable {

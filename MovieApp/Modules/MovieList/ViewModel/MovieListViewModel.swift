@@ -36,32 +36,18 @@ class MovieListViewModel {
                         outputSubject: PassthroughSubject<[MovieListOutput], Never>())
     }
     
-    func watchedToggle(value : MovieItem){
-        let currentList = persistance.fetchAll()
-        if currentList.map({ return $0.id}).contains(value.id){
-            let existingMovie = currentList.filter({ $0.id == value.id})[0]
-            persistance.remove(movie: value)
-            existingMovie.isWatched.toggle()
-            persistance.store(movie: existingMovie)
-        }
-        else {
-            value.isWatched.toggle()
-            persistance.store(movie: value)
-        }
+    func watchedToggle(index : Int) {
+        output.screenData[index].isWatched.toggle()
+        persistance.remove(movie: output.screenData[index])
+        persistance.store(movie: output.screenData[index])
+        output.outputSubject.send([.dataReady])
     }
     
-    func favouriteToggle(value : MovieItem){
-        let currentList = persistance.fetchAll()
-        if currentList.map({ return $0.id}).contains(value.id){
-            let existingMovie = currentList.filter({ $0.id == value.id})[0]
-            persistance.remove(movie: value)
-            existingMovie.isFavourite.toggle()
-            persistance.store(movie: existingMovie)
-        }
-        else {
-            value.isFavourite.toggle()
-            persistance.store(movie: value)
-        }
+    func favouriteToggle(index : Int) {
+        output.screenData[index].isFavourite.toggle()
+        persistance.remove(movie: output.screenData[index])
+        persistance.store(movie: output.screenData[index])
+        output.outputSubject.send([.dataReady])
     }
     
     func setupBindings() -> AnyCancellable {
@@ -91,7 +77,6 @@ class MovieListViewModel {
         var outputActions = [MovieListOutput]()
         return repository.getMoviesList()
             .map({ [unowned self] responseResult -> Result<[MovieItem], NetworkError> in
-                //self.output.outputActions.append(.showLoader(showLoader))
                 self.output.outputSubject.send([.showLoader(showLoader)])
                 switch responseResult {
                 case .success(let response):
@@ -107,7 +92,6 @@ class MovieListViewModel {
                 switch responseResult {
                 case .success(let screenData):
                     self.output.screenData = screenData
-//                    output.outputActions.append(.dataReady)
                     self.output.outputSubject.send([.dataReady])
                     print(output.outputActions)
                 case .failure(let error):
