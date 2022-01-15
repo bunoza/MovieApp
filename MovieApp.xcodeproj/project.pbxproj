@@ -26,7 +26,7 @@
 		C52D1487272EA76C00E350EF /* FavoriteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52D1486272EA76C00E350EF /* FavoriteButton.swift */; };
 		C539D7CC2748771A00142C6F /* MovieDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = C539D7CB2748771A00142C6F /* MovieDetails.swift */; };
 		C540111B27498E8D00E54764 /* ImageYearGradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C540111A27498E8D00E54764 /* ImageYearGradient.swift */; };
-		C567A96F278468020041B704 /* UIControl+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C567A96E278468020041B704 /* UIControl+Extensions.swift */; };
+		C567A96F278468020041B704 /* UIButton+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C567A96E278468020041B704 /* UIButton+Extensions.swift */; };
 		C56B62C4276E375000D23C3A /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56B62C3276E375000D23C3A /* Database.swift */; };
 		C59D58A427567CEB00D6EA74 /* MovieListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59D58A327567CEB00D6EA74 /* MovieListState.swift */; };
 		C5A9BA2B270F72D70024065C /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A9BA2A270F72D70024065C /* Constants.swift */; };
@@ -64,7 +64,7 @@
 		C52D1486272EA76C00E350EF /* FavoriteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteButton.swift; sourceTree = "<group>"; };
 		C539D7CB2748771A00142C6F /* MovieDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetails.swift; sourceTree = "<group>"; };
 		C540111A27498E8D00E54764 /* ImageYearGradient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageYearGradient.swift; sourceTree = "<group>"; };
-		C567A96E278468020041B704 /* UIControl+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIControl+Extensions.swift"; sourceTree = "<group>"; };
+		C567A96E278468020041B704 /* UIButton+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Extensions.swift"; sourceTree = "<group>"; };
 		C56B62C3276E375000D23C3A /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		C59D58A327567CEB00D6EA74 /* MovieListState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieListState.swift; sourceTree = "<group>"; };
 		C5A9BA2A270F72D70024065C /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -129,7 +129,7 @@
 			children = (
 				C501C17127104A6D00FC0CC3 /* UIImageView+Extensions.swift */,
 				C501C1772710558D00FC0CC3 /* UIViewController+Extensions.swift */,
-				C567A96E278468020041B704 /* UIControl+Extensions.swift */,
+				C567A96E278468020041B704 /* UIButton+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -474,7 +474,7 @@
 				C56B62C4276E375000D23C3A /* Database.swift in Sources */,
 				C5A9BA2B270F72D70024065C /* Constants.swift in Sources */,
 				C50D47DC27219BFF005DF631 /* SerializationManager.swift in Sources */,
-				C567A96F278468020041B704 /* UIControl+Extensions.swift in Sources */,
+				C567A96F278468020041B704 /* UIButton+Extensions.swift in Sources */,
 				C501C1742710554600FC0CC3 /* BlurLoaderOverlay.swift in Sources */,
 				C5C45DE1275B7F0B00FB0CC7 /* Root.swift in Sources */,
 			);

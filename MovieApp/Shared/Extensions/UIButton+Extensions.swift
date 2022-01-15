@@ -15,11 +15,11 @@ extension UIButton {
         
         private let subscriber: S?
         private let button: UIButton
-        private let event: UIControl.Event
+        private let event: UIButton.Event
         
         init(subscriber: S,
              button: UIButton,
-             event: UIControl.Event) {
+             event: UIButton.Event) {
             
             self.subscriber = subscriber
             self.button = button
@@ -42,9 +42,9 @@ extension UIButton {
         typealias Failure = Never
         
         private let button: UIButton
-        private let event: UIControl.Event
+        private let event: UIButton.Event
         
-        init(button: UIButton, event: UIControl.Event) {
+        init(button: UIButton, event: UIButton.Event) {
             self.button = button
             self.event = event
         }

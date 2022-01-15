@@ -14,6 +14,7 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
     
     let viewModel : MovieListViewModel
     var observers = Set<AnyCancellable>()
+    var buttonObservers = Set<AnyCancellable>()
     private let refreshControl = UIRefreshControl()
     
     let tableView : UITableView = {
@@ -40,7 +41,6 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
     func configureTitle(title : String) {
         self.navigationItem.title = title
         self.navigationController?.navigationBar.barStyle = .black
-        
     }
     
     override func viewDidLoad() {
@@ -106,7 +106,7 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
     
     @objc func appMovedToForeground() {
         viewModel.input.send(.loading(showLoader: true))
-        }
+    }
     
     func handle(_ action: MovieListOutput) {
         switch action {
@@ -141,35 +141,14 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
         cell.watchedButton.button
             .publisher(for: .touchUpInside)
             .sink { _ in
-                self.viewModel.watchedToggle(value: self.viewModel.output.screenData[indexPath.row])
-                if self.viewModel.output.screenData[indexPath.row].isWatched {
-                    cell.watchedButton.turnOff()
-                    self.viewModel.output.screenData[indexPath.row].isWatched = false
-                } else {
-                    cell.watchedButton.turnOn()
-                    self.viewModel.output.screenData[indexPath.row].isWatched = true
-                }
-            }.store(in: &observers)
+                self.viewModel.watchedToggle(index: indexPath.row)
+            }.store(in: &buttonObservers)
         
         cell.favoriteButton.button
             .publisher(for: .touchUpInside)
             .sink { _ in
-                self.viewModel.favouriteToggle(value: self.viewModel.output.screenData[indexPath.row])
-                if self.viewModel.output.screenData[indexPath.row].isFavourite {
-                    cell.favoriteButton.turnOff()
-                    self.viewModel.output.screenData[indexPath.row].isFavourite = false
-                } else {
-                    cell.favoriteButton.turnOn()
-                    self.viewModel.output.screenData[indexPath.row].isFavourite = true
-                }
-            }.store(in: &observers)
-        
-        if viewModel.output.screenData[indexPath.row].isFavourite {
-            cell.favoriteButton.turnOn()
-        }
-        if viewModel.output.screenData[indexPath.row].isWatched {
-            cell.watchedButton.turnOn()
-        }
+                self.viewModel.favouriteToggle(index: indexPath.row)
+            }.store(in: &buttonObservers)
         return cell
     }
     func tableView(_ tableView: UITableView,
