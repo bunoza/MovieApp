@@ -39,14 +39,18 @@ class MovieListViewModel {
     func watchedToggle(index : Int) {
         output.screenData[index].isWatched.toggle()
         persistance.remove(movie: output.screenData[index])
-        persistance.store(movie: output.screenData[index])
+        if output.screenData[index].isFavourite || output.screenData[index].isWatched {
+            persistance.store(movie: output.screenData[index])
+        }
         output.outputSubject.send([.dataReady])
     }
     
     func favouriteToggle(index : Int) {
         output.screenData[index].isFavourite.toggle()
         persistance.remove(movie: output.screenData[index])
-        persistance.store(movie: output.screenData[index])
+        if output.screenData[index].isFavourite || output.screenData[index].isWatched {
+            persistance.store(movie: output.screenData[index])
+        }
         output.outputSubject.send([.dataReady])
     }
     
