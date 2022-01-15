@@ -26,6 +26,8 @@ class CustomCellView: UITableViewCell {
         let title = UILabel()
         title.translatesAutoresizingMaskIntoConstraints = false
         title.numberOfLines = 2
+        title.font = UIFont.boldSystemFont(ofSize: 18)
+        title.textColor = UIColor.white
         return title
     }()
     
@@ -33,6 +35,8 @@ class CustomCellView: UITableViewCell {
         let movieDescription = UILabel()
         movieDescription.translatesAutoresizingMaskIntoConstraints = false
         movieDescription.numberOfLines = 2
+        movieDescription.font = UIFont.systemFont(ofSize: 15)
+        movieDescription.textColor = UIColor.systemGray4
         return movieDescription
     }()
     
@@ -117,9 +121,13 @@ class CustomCellView: UITableViewCell {
     }
     
     func configure(with movie: MovieItem) {
-        title.attributedText = NSAttributedString(string: movie.title, attributes: [.font : UIFont.boldSystemFont(ofSize: 18), .foregroundColor : UIColor.white])
-        movieDescription.attributedText = NSAttributedString(string: movie.overview, attributes: [.font : UIFont.systemFont(ofSize: 15), .foregroundColor : UIColor.systemGray4])
-        imageYearGradient.configureImageYearGradient(imageURL: Constants.imageBaseUrl + Constants.defaultPictureSize + movie.posterPath, year: movie.releaseDate)
+        title.attributedText = NSAttributedString(string: movie.title)
+        movieDescription.attributedText = NSAttributedString(string: movie.overview)
+        imageYearGradient.configureImageYearGradient(imageURL:
+            Constants.imageBaseUrl +
+            Constants.defaultPictureSize +
+            movie.posterPath,
+            year: movie.releaseDate)
         self.id = movie.id
         movie.isWatched ? watchedButton.turnOn() : watchedButton.turnOff()
         movie.isFavourite ? favoriteButton.turnOn() : favoriteButton.turnOff()

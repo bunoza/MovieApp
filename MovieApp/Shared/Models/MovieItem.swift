@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class MovieItem : NSObject, NSCoding, NSSecureCoding {
+class MovieItem : NSObject, NSCoding, NSSecureCoding, Codable {
     static var supportsSecureCoding: Bool  = true
     
     

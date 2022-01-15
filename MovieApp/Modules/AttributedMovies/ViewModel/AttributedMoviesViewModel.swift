@@ -29,16 +29,16 @@ class AttributedMoviesViewModel {
     
     func watchedToggle(index : Int) {
         output.screenData[index].isWatched.toggle()
+        output.outputSubject.send([.dataReady])
         persistance.remove(movie: output.screenData[index])
         persistance.store(movie: output.screenData[index])
-        output.outputSubject.send([.dataReady])
     }
     
     func favouriteToggle(index : Int) {
         output.screenData[index].isFavourite.toggle()
+        output.outputSubject.send([.dataReady])
         persistance.remove(movie: output.screenData[index])
         persistance.store(movie: output.screenData[index])
-        output.outputSubject.send([.dataReady])
     }
     
     func setupBindings() -> AnyCancellable {
