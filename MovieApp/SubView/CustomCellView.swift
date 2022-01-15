@@ -127,6 +127,10 @@ class CustomCellView: UITableViewCell {
         movie.isWatched ? watchedButton.turnOn() : watchedButton.turnOff()
         movie.isFavourite ? favoriteButton.turnOn() : favoriteButton.turnOff()
         self.backgroundColor = UIColor(red: 0.17, green: 0.17, blue: 0.18, alpha: 1.0)
+        
+        let bgColorView = UIView()
+        bgColorView.backgroundColor = UIColor(red: 0.13, green: 0.13, blue: 0.14, alpha: 1.0)
+        self.selectedBackgroundView = bgColorView
     }
     
     func setupConstraints() {

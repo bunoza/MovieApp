@@ -144,11 +144,6 @@ class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UIT
         else if viewModel.tag == "favorites" {
             cell.watchedButton.isHidden = true
         }
-        
-        let bgColorView = UIView()
-        bgColorView.backgroundColor = UIColor(red: 0.13, green: 0.13, blue: 0.14, alpha: 1.0)
-        cell.selectedBackgroundView = bgColorView
-        
         cell.watchedButton.button
             .publisher(for: .touchUpInside)
             .sink { _ in

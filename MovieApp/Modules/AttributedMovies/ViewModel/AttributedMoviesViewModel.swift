@@ -27,6 +27,8 @@ class AttributedMoviesViewModel {
         self.tag = tag
     }
     
+    
+    
     func watchedToggle(index : Int) {
         output.screenData[index].isWatched.toggle()
         persistance.remove(movie: output.screenData[index])
