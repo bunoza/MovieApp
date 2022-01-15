@@ -12,7 +12,7 @@ import UIKit
 class CustomCellView: UITableViewCell {
     
     var id : Int = -1
-
+    
     let imageYearGradient : ImageYearGradient = {
         let imageYearGradient = ImageYearGradient()
         imageYearGradient.translatesAutoresizingMaskIntoConstraints = false
@@ -119,10 +119,10 @@ class CustomCellView: UITableViewCell {
         title.attributedText = NSAttributedString(string: movie.title)
         movieDescription.attributedText = NSAttributedString(string: movie.overview)
         imageYearGradient.configureImageYearGradient(imageURL:
-            Constants.imageBaseUrl +
-            Constants.defaultPictureSize +
-            movie.posterPath,
-            year: movie.releaseDate)
+                                                        Constants.imageBaseUrl +
+                                                     Constants.defaultPictureSize +
+                                                     movie.posterPath,
+                                                     year: movie.releaseDate)
         self.id = movie.id
         movie.isWatched ? watchedButton.turnOn() : watchedButton.turnOff()
         movie.isFavourite ? favoriteButton.turnOn() : favoriteButton.turnOff()

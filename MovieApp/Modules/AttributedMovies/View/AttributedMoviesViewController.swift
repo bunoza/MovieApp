@@ -14,7 +14,7 @@ import Tabman
 class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIViewControllerTransitioningDelegate {
     
     let viewModel : AttributedMoviesViewModel
-
+    
     var observers = Set<AnyCancellable>()
     
     private let refreshControl = UIRefreshControl()
@@ -60,7 +60,7 @@ class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UIT
         navigationController?.toolbar.isHidden = true
     }
     
-    func setupTableView(){
+    func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(CustomCellView.self, forCellReuseIdentifier: "cell")
@@ -70,7 +70,7 @@ class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UIT
         view.addSubview(tableView)
     }
     
-    func setupConstraints(){
+    func setupConstraints() {
         tableView.snp.makeConstraints { (make) in
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
@@ -95,7 +95,7 @@ class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UIT
     
     @objc func appMovedToForeground() {
         viewModel.input.send(.loading(showLoader: true))
-        }
+    }
     
     func setupBindings() {
         viewModel.setupBindings().store(in: &observers)

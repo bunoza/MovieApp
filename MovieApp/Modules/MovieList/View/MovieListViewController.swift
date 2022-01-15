@@ -57,7 +57,7 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
         navigationController?.toolbar.isHidden = true
     }
     
-    func setupTableView(){
+    func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(CustomCellView.self, forCellReuseIdentifier: "cell")
@@ -67,7 +67,7 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
         view.addSubview(tableView)
     }
     
-    func setupConstraints(){
+    func setupConstraints() {
         tableView.snp.makeConstraints { (make) in
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
