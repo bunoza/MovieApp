@@ -13,8 +13,8 @@ class CustomCellView: UITableViewCell {
     
     var id : Int = -1
     
-    var watchedClicked: (() -> ())?
-    var favouriteClicked: (() -> ())?
+//    var watchedClicked: (() -> ())?
+//    var favouriteClicked: (() -> ())?
 
     let imageYearGradient : ImageYearGradient = {
         let imageYearGradient = ImageYearGradient()
@@ -104,8 +104,8 @@ class CustomCellView: UITableViewCell {
         buttonStack.addArrangedSubview(watchedButton)
         contentView.addSubview(stackview)
         contentView.backgroundColor = UIColor(red: 0.11, green: 0.11, blue: 0.12, alpha: 1.0)
-        watchedButton.button.addTarget(self, action: #selector(toggleWatched), for: .touchUpInside)
-        favoriteButton.button.addTarget(self, action: #selector(toggleFavorite), for: .touchUpInside)
+//        watchedButton.button.addTarget(self, action: #selector(toggleWatched), for: .touchUpInside)
+//        favoriteButton.button.addTarget(self, action: #selector(toggleFavorite), for: .touchUpInside)
         setupConstraints()
     }
     
@@ -134,13 +134,13 @@ class CustomCellView: UITableViewCell {
         self.backgroundColor = UIColor(red: 0.17, green: 0.17, blue: 0.18, alpha: 1.0)
     }
     
-    @objc func toggleWatched() {
-        watchedClicked?()
-    }
-    
-    @objc func toggleFavorite() {
-        favouriteClicked?()
-    }
+//    @objc func toggleWatched() {
+//        watchedClicked?()
+//    }
+//    
+//    @objc func toggleFavorite() {
+//        favouriteClicked?()
+//    }
     
     func setupConstraints() {
         imageYearGradient.snp.makeConstraints { (make) in
