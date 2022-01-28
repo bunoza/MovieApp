@@ -134,7 +134,8 @@ class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UIT
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: CustomCellView = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomCellView
+//        let cell: CustomCellView = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomCellView
+        let cell: CustomCellView = CustomCellView()
         
         cell.configure(with: viewModel.output.screenData[indexPath.row])
         

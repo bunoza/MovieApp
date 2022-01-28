@@ -30,11 +30,14 @@ class AttributedMoviesViewModel {
     
     
     func watchedToggle(index : Int) {
+        print("Watched: \(output.screenData.map({$0.title})) " + "count: \(output.screenData.count) " + "index: \(index)") 
         output.screenData[index].isWatched.toggle()
         persistance.remove(movie: output.screenData[index])
         if output.screenData[index].isFavourite || output.screenData[index].isWatched {
             persistance.store(movie: output.screenData[index])
         }
+        output.screenData.remove(at: index)
+               
         output.outputSubject.send([.dataReady])
     }
     
@@ -44,6 +47,8 @@ class AttributedMoviesViewModel {
         if output.screenData[index].isFavourite || output.screenData[index].isWatched {
             persistance.store(movie: output.screenData[index])
         }
+        output.screenData.remove(at: index)
+        print(output.screenData.map({$0.title}))
         output.outputSubject.send([.dataReady])
     }
     
