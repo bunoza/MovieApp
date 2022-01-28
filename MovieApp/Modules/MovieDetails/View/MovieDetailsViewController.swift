@@ -13,6 +13,7 @@ class MovieDetailsViewController : UIViewController {
     let viewModel : MovieDetailsViewModel
     
     var observers = Set<AnyCancellable>()
+    var buttonObservers = Set<AnyCancellable>()
     
     let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -60,29 +61,10 @@ class MovieDetailsViewController : UIViewController {
         movieDetailsStackView.setGenreText(text: viewModel.genres)
         movieDetailsStackView.setDescriptionText(text: viewModel.quote)
         movieDetailsStackView.setContentText(text: viewModel.movie.overview)
-        watchedButton.button.addTarget(self, action: #selector(toggleWatched), for: .touchUpInside)
-        favoriteButton.button.addTarget(self, action: #selector(toggleFavorite), for: .touchUpInside)
         viewModel.movie.isWatched ? watchedButton.turnOn() : watchedButton.turnOff()
         viewModel.movie.isFavourite ? favoriteButton.turnOn() : favoriteButton.turnOff()
     }
-    
-    @objc func toggleWatched() {
-        if self.viewModel.movie.isWatched {
-            watchedButton.turnOff()
-        } else {
-            watchedButton.turnOn()
-        }
-        viewModel.watchedToggle()
-    }
-    
-    @objc func toggleFavorite() {
-        if self.viewModel.movie.isFavourite {
-            favoriteButton.turnOff()
-        } else {
-            favoriteButton.turnOn()
-        }
-        viewModel.favouriteToggle()
-    }
+   
     
     func setupBindings() {
         viewModel.setupBindings().store(in: &observers)
@@ -97,6 +79,20 @@ class MovieDetailsViewController : UIViewController {
                 }
             }
             .store(in: &observers)
+        
+        watchedButton.button
+            .publisher(for: .touchUpInside)
+            .sink { _ in
+                self.viewModel.watchedToggle()
+                self.handle(.dataReady)
+            }.store(in: &buttonObservers)
+        
+        favoriteButton.button
+            .publisher(for: .touchUpInside)
+            .sink { _ in
+                self.viewModel.favouriteToggle()
+                self.handle(.dataReady)
+            }.store(in: &buttonObservers)
     }
     
     func handle(_ action: MovieListOutput) {

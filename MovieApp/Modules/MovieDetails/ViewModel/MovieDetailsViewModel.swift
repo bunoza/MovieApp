@@ -20,7 +20,7 @@ class MovieDetailsViewModel {
     var output : OutputDetails
     
     var movie: MovieItem
-    let defaults = UserDefaults.standard
+    let persistence = Database()
     let repository = Repository()
     var genres : String
     var quote : String
@@ -34,34 +34,22 @@ class MovieDetailsViewModel {
                                outputSubject: PassthroughSubject<[MovieListOutput], Never>())
     }
     
-    func watchedToggle(){
-        var watched = defaults.object(forKey: "watched") as? [Int] ?? [Int]()
-        if watched.contains(movie.id) {
-            watched = watched.filter {$0 != movie.id}
-            defaults.set(watched, forKey: "watched")
-            movie.isWatched = false
-            print("Watched:  \(watched)")
-        } else {
-            watched.append(movie.id)
-            defaults.set(watched, forKey: "watched")
-            movie.isWatched = true
-            print("Watched:  \(watched)")
+    func watchedToggle() {
+        movie.isWatched.toggle()
+        persistence.removeByID(id: movie.id)
+        if movie.isFavourite || movie.isWatched {
+            persistence.store(movie: movie)
         }
+        output.outputSubject.send([.dataReady])
     }
     
-    func favouriteToggle(){
-        var favourite = defaults.object(forKey: "favorites") as? [Int] ?? [Int]()
-        if favourite.contains(movie.id) {
-            favourite = favourite.filter {$0 != movie.id}
-            defaults.set(favourite, forKey: "favorites")
-            movie.isFavourite = false
-            print("Favorites:  \(favourite)")
-        } else {
-            favourite.append(movie.id)
-            defaults.set(favourite, forKey: "favorites")
-            movie.isFavourite = true
-            print("Favorites:  \(favourite)")
+    func favouriteToggle() {
+        movie.isFavourite.toggle()
+        persistence.removeByID(id: movie.id)
+        if movie.isFavourite || movie.isWatched {
+            persistence.store(movie: movie)
         }
+        output.outputSubject.send([.dataReady])
     }
     
     func setupBindings() -> AnyCancellable {

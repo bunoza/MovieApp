@@ -58,6 +58,10 @@ class Database {
     
     func remove(movie : MovieItem) {
         storeAll(movies: fetchAll().filter({ $0.id != movie.id }))
-        
     }
+    
+    func removeByID(id : Int) {
+        storeAll(movies: fetchAll().filter({ $0.id != id }))
+    }
+    
 }
