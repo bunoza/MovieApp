@@ -59,6 +59,15 @@ class ImageYearGradient : UIView {
         return imageview
     }
     
+    func refreshGradient() {
+        imageView = addGradient(toImage: imageView)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.refreshGradient()
+    }
+    
     func setupConstraints(){
         imageView.snp.makeConstraints { (make) in
             make.edges.equalTo(self)
