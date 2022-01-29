@@ -10,12 +10,15 @@ import Foundation
 class Database {
     
     let defaults = UserDefaults.standard
+    
+    let encoder = JSONEncoder()
+    let decoder = JSONDecoder()
         
     func fetchAll() -> [MovieItem] {
         var unarchivedMovies : [MovieItem] = []
         do {
-            let decodedMovies = defaults.object(forKey: "movies") as? Data
-            unarchivedMovies = try NSKeyedUnarchiver.unarchivedArrayOfObjects(ofClass: MovieItem.self, from: decodedMovies ?? Data())!
+            let decodedMovies = defaults.data(forKey: "movies")
+            unarchivedMovies = try decoder.decode([MovieItem].self, from: decodedMovies!)
         }
         catch {}
         return unarchivedMovies
@@ -42,16 +45,16 @@ class Database {
         
         unarchivedMovies.append(movie)
         do {
-        let encoded = try NSKeyedArchiver.archivedData(withRootObject: unarchivedMovies, requiringSecureCoding: false)
-            defaults.set(encoded, forKey: "movies")
+            let data = try encoder.encode(unarchivedMovies)
+            defaults.set(data, forKey: "movies")
         }
         catch{}
     }
     
     func storeAll(movies : [MovieItem]) {
         do {
-        let encoded = try NSKeyedArchiver.archivedData(withRootObject: movies, requiringSecureCoding: false)
-            defaults.set(encoded, forKey: "movies")
+            let data = try encoder.encode(movies)
+            defaults.set(data, forKey: "movies")
         }
         catch{}
     }

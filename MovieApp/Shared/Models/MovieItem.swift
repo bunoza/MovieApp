@@ -8,9 +8,7 @@
 import Foundation
 import Combine
 
-class MovieItem : NSObject, NSCoding, NSSecureCoding, Codable {
-    static var supportsSecureCoding: Bool  = true
-    
+class MovieItem : Codable {
     
     var id: Int = 0
     var title: String = ""
@@ -29,29 +27,6 @@ class MovieItem : NSObject, NSCoding, NSSecureCoding, Codable {
         self.isWatched = isWatched
         self.isFavourite = isFavourite
     }
-    
-    
-    func encode(with coder: NSCoder) {
-        coder.encode(id, forKey: "id")
-        coder.encode(title, forKey: "title")
-        coder.encode(overview, forKey: "overview")
-        coder.encode(posterPath, forKey: "posterPath")
-        coder.encode(releaseDate, forKey: "releaseDate")
-        coder.encode(isWatched, forKey: "isWatched")
-        coder.encode(isFavourite, forKey: "isFavourite")
-    }
-    
-    required convenience init?(coder: NSCoder) {
-        let id = coder.decodeInteger(forKey: "id")
-        let title = coder.decodeObject(forKey: "title") as! String
-        let overview = coder.decodeObject(forKey: "overview") as! String
-        let posterPath = coder.decodeObject(forKey: "posterPath") as! String
-        let releaseDate = coder.decodeObject(forKey: "releaseDate") as! String
-        let isWatched = coder.decodeBool(forKey: "isWatched")
-        let isFavourite = coder.decodeBool(forKey: "isFavourite")
-        self.init(id: id, title: title, overview: overview, posterPath: posterPath, releaseDate: releaseDate, isFavourite: isFavourite, isWatched: isWatched)
-    }
-   
 }
 
 
