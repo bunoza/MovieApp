@@ -46,8 +46,8 @@ class ImageYearGradient : UIView {
     
     let gradient : CAGradientLayer = {
         let gradient = CAGradientLayer()
-        let startColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0).cgColor
-        let endColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1).cgColor
+        let startColor = Color.cellGradientStartColor
+        let endColor = Color.cellGradientEndColor
         gradient.colors = [startColor, endColor]
         return gradient
     }()

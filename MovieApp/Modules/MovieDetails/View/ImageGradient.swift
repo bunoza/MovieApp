@@ -20,8 +20,8 @@ class ImageGradient : UIView {
     
     let gradient : CAGradientLayer = {
         let gradient = CAGradientLayer()
-        let startColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.8).cgColor
-        let endColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0).cgColor
+        let startColor = Color.detailsGradientStartColor
+        let endColor = Color.detailsGradientEndColor
         gradient.colors = [startColor, endColor]
         return gradient
     }()

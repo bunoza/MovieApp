@@ -23,7 +23,7 @@ class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UIT
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
-        tableView.backgroundColor = UIColor(red: 0.17, green: 0.17, blue: 0.18, alpha: 1.0)
+        tableView.backgroundColor = Color.cellViewBackgroundColor
         return tableView
     }()
     
@@ -44,7 +44,7 @@ class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UIT
         super.viewDidLoad()
         setupNavigationAppearance()
         setupView()
-        view.backgroundColor = UIColor(red: 0.17, green: 0.17, blue: 0.18, alpha: 1.0)
+        view.backgroundColor = Color.cellViewBackgroundColor
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -55,7 +55,6 @@ class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UIT
     }
     
     func setupNavigationAppearance() {
-        self.title = "s"
         self.navigationController?.navigationBar.barStyle = .black
         self.navigationController?.navigationBar.backItem?.title = "title"
         self.navigationItem.backBarButtonItem?.tintColor = .white

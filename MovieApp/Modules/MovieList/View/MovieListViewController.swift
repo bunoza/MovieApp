@@ -21,7 +21,7 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
-        tableView.backgroundColor = UIColor(red: 0.17, green: 0.17, blue: 0.18, alpha: 1.0)
+        tableView.backgroundColor = Color.cellViewBackgroundColor
         return tableView
     }()
     
@@ -47,7 +47,7 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
         super.viewDidLoad()
         configureTitle(title: "MovieApp")
         setupView()
-        view.backgroundColor = UIColor(red: 0.17, green: 0.17, blue: 0.18, alpha: 1.0)
+        view.backgroundColor = Color.cellViewBackgroundColor
     }
     
     override func viewWillAppear(_ animated: Bool) {
