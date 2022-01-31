@@ -15,26 +15,30 @@ struct MovieDetails : Codable {
     var poster_path: String
     var release_date: String
     var status, tagline, title: String
+    
+    enum CodingKeys: String, CodingKey {
+        case backdrop_path
+        case genres
+        case id
+        case imdb_id
+        case original_language
+        case original_title
+        case overview
+        case poster_path
+        case release_date
+        case status
+        case tagline
+        case title
+    }
 }
 
 // MARK: - Genre
 struct Genre : Codable {
     var id: Int
     var name: String
-}
-
-enum CodingKeys: String, CodingKey {
-    case backdrop_path
-    case genres
-    case id
-    case imdb_id
-    case original_language
-    case original_title
-    case overview
-    case poster_path
-    case release_date
-    case status
-    case tagline
-    case title
-    case name
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+    }
 }
