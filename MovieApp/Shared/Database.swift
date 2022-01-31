@@ -17,8 +17,11 @@ class Database {
     func fetchAll() -> [MovieItem] {
         var unarchivedMovies : [MovieItem] = []
         do {
-            let decodedMovies = defaults.data(forKey: "movies")
-            unarchivedMovies = try decoder.decode([MovieItem].self, from: decodedMovies!)
+            guard let decodedMovies = defaults.data(forKey: "movies")
+            else {
+                return unarchivedMovies
+            }
+                unarchivedMovies = try decoder.decode([MovieItem].self, from: decodedMovies)
         }
         catch {}
         return unarchivedMovies
