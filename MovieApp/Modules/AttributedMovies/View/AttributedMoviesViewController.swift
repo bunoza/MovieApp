@@ -13,9 +13,9 @@ import Tabman
 
 class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIViewControllerTransitioningDelegate {
     
-    let viewModel : AttributedMoviesViewModel
-    
-    var observers = Set<AnyCancellable>()
+    private let viewModel : AttributedMoviesViewModel
+    #warning("naming")
+    private var observers = Set<AnyCancellable>()
     
     private let refreshControl = UIRefreshControl()
     
@@ -39,16 +39,15 @@ class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UIT
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+    #warning("remove")
     func configureTitle(title : String) {
         self.navigationItem.title = title
-        self.navigationController?.navigationBar.barStyle = .black
         
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureTitle(title: "MovieApp")
+        setupNavigationAppearance()
         setupView()
         view.backgroundColor = UIColor(red: 0.17, green: 0.17, blue: 0.18, alpha: 1.0)
     }
@@ -60,10 +59,17 @@ class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UIT
         navigationController?.toolbar.isHidden = true
     }
     
+    func setupNavigationAppearance() {
+        self.title = "s"
+        self.navigationController?.navigationBar.barStyle = .black
+        self.navigationController?.navigationBar.backItem?.title = "title"
+        self.navigationItem.backBarButtonItem?.tintColor = .white
+    }
+    
     func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(CustomCellView.self, forCellReuseIdentifier: "cell")
+        tableView.register(MovieCellView.self, forCellReuseIdentifier: "cell")
     }
     
     func setupViews() {
@@ -135,16 +141,17 @@ class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UIT
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 //        let cell: CustomCellView = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomCellView
-        let cell: CustomCellView = CustomCellView()
+        let cell: MovieCellView = MovieCellView()
         
         cell.configure(with: viewModel.output.screenData[indexPath.row])
-        
+        #warning("move to cell")
         if viewModel.tag == "watched" {
             cell.favoriteButton.isHidden = true
         }
         else if viewModel.tag == "favorites" {
             cell.watchedButton.isHidden = true
         }
+        
         cell.watchedButton.button
             .publisher(for: .touchUpInside)
             .sink { _ in
@@ -158,14 +165,10 @@ class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UIT
             }.store(in: &observers)
         return cell
     }
-    func tableView(_ tableView: UITableView,
-                   didSelectRowAt indexPath: IndexPath) {
-        let controller = MovieDetailsViewController(viewModel: MovieDetailsViewModel(movie: viewModel.output.screenData[indexPath.row]))
-        controller.modalPresentationStyle = .overCurrentContext
-        controller.transitioningDelegate = self
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        self.navigationItem.backBarButtonItem?.tintColor = .white
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let movie = viewModel.output.screenData[indexPath.row]
+        let controller = MovieDetailsViewController(viewModel: MovieDetailsViewModel(movie: movie))
         self.navigationController?.pushViewController(controller, animated: true)
     }
-    
 }

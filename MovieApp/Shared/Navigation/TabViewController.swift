@@ -38,11 +38,17 @@ class TabViewController: TabmanViewController, PageboyViewControllerDataSource, 
     private var viewControllers = [AttributedMoviesViewController(viewModel: AttributedMoviesViewModel(tag: "watched")),
                                    MovieListViewController(viewModel: MovieListViewModel()),
                                    AttributedMoviesViewController(viewModel: AttributedMoviesViewModel(tag: "favorites"))]
+    
+    func setupNavigationAppearance() {
+        self.navigationController?.navigationBar.barStyle = .black
+        self.navigationController?.navigationBar.tintColor = .white
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        setupNavigationAppearance()
         self.dataSource = self
+        self.title = ""
 
         // Create bar
         let bar = TMBar.ButtonBar()

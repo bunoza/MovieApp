@@ -60,7 +60,7 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
     func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(CustomCellView.self, forCellReuseIdentifier: "cell")
+        tableView.register(MovieCellView.self, forCellReuseIdentifier: "cell")
     }
     
     func setupViews() {
@@ -131,7 +131,7 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 //        let cell: CustomCellView = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomCellView
-        let cell: CustomCellView = CustomCellView()
+        let cell: MovieCellView = MovieCellView()
         cell.configure(with: viewModel.output.screenData[indexPath.row])
         
         cell.watchedButton.button

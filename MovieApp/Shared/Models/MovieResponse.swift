@@ -7,8 +7,7 @@
 
 import Foundation
 
-struct Root : Codable{
-//    let dates: Dates
+struct MovieResponse : Codable{
     let page: Int
     let results: [Movie]
     let total_pages, total_results: Int

@@ -28,5 +28,3 @@ class MovieItem : Codable {
         self.isFavourite = isFavourite
     }
 }
-
-

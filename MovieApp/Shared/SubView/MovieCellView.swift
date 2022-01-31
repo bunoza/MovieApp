@@ -9,7 +9,7 @@ import Foundation
 import Kingfisher
 import UIKit
 
-class CustomCellView: UITableViewCell {
+class MovieCellView: UITableViewCell {
     
     var id : Int = -1
     
