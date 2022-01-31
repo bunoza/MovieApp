@@ -14,8 +14,8 @@ import Tabman
 class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIViewControllerTransitioningDelegate {
     
     private let viewModel : AttributedMoviesViewModel
-    #warning("naming")
-    private var observers = Set<AnyCancellable>()
+
+    private var disposeBag = Set<AnyCancellable>()
     
     private let refreshControl = UIRefreshControl()
     
@@ -38,11 +38,6 @@ class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UIT
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    #warning("remove")
-    func configureTitle(title : String) {
-        self.navigationItem.title = title
-        
     }
     
     override func viewDidLoad() {
@@ -104,7 +99,7 @@ class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UIT
     }
     
     func setupBindings() {
-        viewModel.setupBindings().store(in: &observers)
+        viewModel.setupBindings().store(in: &disposeBag)
         
         viewModel.output.outputSubject
             .subscribe(on: DispatchQueue.global(qos: .background))
@@ -115,7 +110,7 @@ class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UIT
                     print("Action: \(action)")
                 }
             }
-            .store(in: &observers)
+            .store(in: &disposeBag)
     }
     
     func handle(_ action: MovieListOutput) {
@@ -144,7 +139,7 @@ class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UIT
         let cell: MovieCellView = MovieCellView()
         
         cell.configure(with: viewModel.output.screenData[indexPath.row])
-        #warning("move to cell")
+
         if viewModel.tag == "watched" {
             cell.favoriteButton.isHidden = true
         }
@@ -156,13 +151,13 @@ class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UIT
             .publisher(for: .touchUpInside)
             .sink { _ in
                 self.viewModel.watchedToggle(index: indexPath.row)
-            }.store(in: &observers)
+            }.store(in: &disposeBag)
         
         cell.favoriteButton.button
             .publisher(for: .touchUpInside)
             .sink { _ in
                 self.viewModel.favouriteToggle(index: indexPath.row)
-            }.store(in: &observers)
+            }.store(in: &disposeBag)
         return cell
     }
     

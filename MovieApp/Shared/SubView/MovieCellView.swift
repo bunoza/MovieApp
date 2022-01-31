@@ -10,9 +10,7 @@ import Kingfisher
 import UIKit
 
 class MovieCellView: UITableViewCell {
-    
-    var id : Int = -1
-    
+        
     let imageYearGradient : ImageYearGradient = {
         let imageYearGradient = ImageYearGradient()
         imageYearGradient.translatesAutoresizingMaskIntoConstraints = false
@@ -123,7 +121,6 @@ class MovieCellView: UITableViewCell {
                                                      Constants.defaultPictureSize +
                                                      movie.posterPath,
                                                      year: movie.releaseDate)
-        self.id = movie.id
         movie.isWatched ? watchedButton.turnOn() : watchedButton.turnOff()
         movie.isFavourite ? favoriteButton.turnOn() : favoriteButton.turnOff()
         self.backgroundColor = UIColor(red: 0.17, green: 0.17, blue: 0.18, alpha: 1.0)
