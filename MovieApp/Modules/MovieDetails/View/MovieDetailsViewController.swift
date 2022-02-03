@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-class MovieDetailsViewController : UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+class MovieDetailsViewController : UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     let viewModel : MovieDetailsViewModel
     
@@ -41,7 +41,6 @@ class MovieDetailsViewController : UIViewController, UICollectionViewDataSource,
     let movieDetailsStackView: MovieDetailsStackView = {
         let movieDetailsStackView = MovieDetailsStackView()
         movieDetailsStackView.translatesAutoresizingMaskIntoConstraints = false
-        movieDetailsStackView.backgroundColor = .systemPink
         return movieDetailsStackView
     }()
     
@@ -62,8 +61,10 @@ class MovieDetailsViewController : UIViewController, UICollectionViewDataSource,
     
     let collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
-        collectionView.backgroundColor = .cyan
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .clear
+        collectionView.alwaysBounceHorizontal = true
+        collectionView.isScrollEnabled = true
         return collectionView
     }()
     
@@ -179,27 +180,26 @@ class MovieDetailsViewController : UIViewController, UICollectionViewDataSource,
     func setupConstraints(){
         scrollView.snp.makeConstraints { make in
             make.top.equalTo(view)
-//            make.bottom.equalTo(view)
+            make.bottom.equalTo(view)
             make.width.equalTo(view)
         }
         imageGradient.snp.makeConstraints { make in
             make.height.lessThanOrEqualTo(550)
-            make.width.equalToSuperview()
+            make.width.equalTo(view)
             make.top.equalTo(contentView)
         }
         movieDetailsStackView.snp.makeConstraints { make in
             make.top.equalTo(imageGradient.snp.bottom)
-            make.bottom.equalTo(contentView.snp.bottom)
-            make.width.equalToSuperview()
+            make.width.equalTo(view.snp.width)
         }
-        contentView.snp.makeConstraints { (make) in
-            make.top.equalTo(scrollView)
-            make.bottom.equalTo(scrollView)
-            make.width.equalTo(scrollView)
+        contentView.snp.makeConstraints { make in
+            make.edges.equalTo(scrollView)
         }
         collectionView.snp.makeConstraints { make in
             make.top.equalTo(movieDetailsStackView.snp.bottom)
-            make.height.greaterThanOrEqualTo(100)
+            make.width.equalTo(view)
+            make.bottom.equalTo(contentView.snp.bottom)
+            make.height.equalTo(200)
         }
     }
     
@@ -207,11 +207,25 @@ class MovieDetailsViewController : UIViewController, UICollectionViewDataSource,
         return viewModel.output.screenDataSimilar.count
     }
     
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! SimilarCollectionViewCell
-        cell.backgroundColor = .white
 
         cell.configure(imageURL: viewModel.output.screenDataSimilar[indexPath.row].posterPath, title: viewModel.output.screenDataSimilar[indexPath.row].title)
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+                    
+        let cellWidth = 150
+        let cellHeight = cellWidth
+        return CGSize(width: cellWidth, height: cellHeight)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print(viewModel.output.screenDataSimilar[indexPath.row])
     }
 }

@@ -62,6 +62,5 @@ class ImageGradient : UIView {
         }
         imageView.setImageFromUrlwithCompletion(url: imageURL, completion: onImageSet)
         self.imageView = self.addGradient(toImage: self.imageView)
-
     }
 }

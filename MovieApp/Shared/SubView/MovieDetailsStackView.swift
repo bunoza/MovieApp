@@ -53,7 +53,13 @@ class MovieDetailsStackView : UIView{
         return content
     }()
     
-    
+    let similarMovies : UILabel = {
+        let similarMovies = UILabel()
+        similarMovies.translatesAutoresizingMaskIntoConstraints = false
+        similarMovies.numberOfLines = 0
+        similarMovies.attributedText = NSAttributedString(string: "Similar movies", attributes: [.font : UIFont.boldSystemFont(ofSize: 25), .foregroundColor : UIColor.white])
+        return similarMovies
+    }()
     
     let stackview: UIStackView = {
         let stackview = UIStackView()
@@ -101,6 +107,7 @@ class MovieDetailsStackView : UIView{
         stackview.addArrangedSubview(quoteText)
         stackview.addArrangedSubview(descriptionLabel)
         stackview.addArrangedSubview(movieOverview)
+        stackview.addArrangedSubview(similarMovies)
         self.addSubview(stackview)
     }
     

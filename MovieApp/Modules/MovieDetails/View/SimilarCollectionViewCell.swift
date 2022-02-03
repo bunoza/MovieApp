@@ -16,7 +16,7 @@ class SimilarCollectionViewCell : UICollectionViewCell {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 10
-//        imageView.sizeToFit()
+        imageView.sizeToFit()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
@@ -26,7 +26,9 @@ class SimilarCollectionViewCell : UICollectionViewCell {
         let title = UILabel()
         title.translatesAutoresizingMaskIntoConstraints = false
         title.numberOfLines = 1
+        title.clipsToBounds = true
         title.textColor = .white
+        title.textAlignment = .center
         return title
     }()
     
@@ -75,7 +77,8 @@ class SimilarCollectionViewCell : UICollectionViewCell {
         }
         title.snp.makeConstraints { (make) in
             make.bottom.equalTo(imageView.snp.bottom).inset(UIEdgeInsets(top: 0, left: 0, bottom: 5, right: 0))
-            make.centerX.equalTo(imageView)
+            make.left.equalTo(imageView.snp.left).inset(UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 0))
+            make.right.equalTo(imageView.snp.right).inset(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 5))
         }
     }
     
@@ -87,7 +90,6 @@ class SimilarCollectionViewCell : UICollectionViewCell {
         let url = Constants.imageBaseUrl + Constants.defaultPictureSize + imageURL
         imageView.setImageFromUrlwithCompletion(url: url, completion: onImageSet)
         
-        self.title.attributedText = NSAttributedString(string: String(title.prefix(4)), attributes: [.font : UIFont.boldSystemFont(ofSize: 15), .foregroundColor : UIColor.white])
-        print("\(title) configured!")
+        self.title.attributedText = NSAttributedString(string: title, attributes: [.font : UIFont.boldSystemFont(ofSize: 15), .foregroundColor : UIColor.white])
     }
 }
