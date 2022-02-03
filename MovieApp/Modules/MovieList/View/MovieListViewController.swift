@@ -122,6 +122,8 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
         case.gotError(let message):
             showErrorAlert(on: self)
             print(message)
+        case .dataReadySimilar:
+            print("similar")
         }
     }
     

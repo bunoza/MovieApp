@@ -126,6 +126,8 @@ class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UIT
         case.gotError(let message):
             showErrorAlert(on: self)
             print(message)
+        case .dataReadySimilar:
+            break
         }
     }
     

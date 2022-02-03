@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-class MovieDetailsViewController : UIViewController {
+class MovieDetailsViewController : UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
     let viewModel : MovieDetailsViewModel
     
@@ -41,6 +41,7 @@ class MovieDetailsViewController : UIViewController {
     let movieDetailsStackView: MovieDetailsStackView = {
         let movieDetailsStackView = MovieDetailsStackView()
         movieDetailsStackView.translatesAutoresizingMaskIntoConstraints = false
+        movieDetailsStackView.backgroundColor = .systemPink
         return movieDetailsStackView
     }()
     
@@ -48,6 +49,22 @@ class MovieDetailsViewController : UIViewController {
         let contentView = UIView()
         contentView.translatesAutoresizingMaskIntoConstraints = false
         return contentView
+    }()
+    
+    private let flowLayout: UICollectionViewFlowLayout = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 10
+        layout.minimumInteritemSpacing = 10
+        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        return layout
+        }()
+    
+    let collectionView: UICollectionView = {
+        let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
+        collectionView.backgroundColor = .cyan
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        return collectionView
     }()
     
     init(viewModel : MovieDetailsViewModel) {
@@ -65,9 +82,9 @@ class MovieDetailsViewController : UIViewController {
         viewModel.movie.isFavourite ? favoriteButton.turnOn() : favoriteButton.turnOff()
     }
    
-    
     func setupBindings() {
-        viewModel.setupBindings().store(in: &observers)
+        viewModel.setupBindingsDetails().store(in: &observers)
+        viewModel.setupBindingsSimilar().store(in: &observers)
         
         viewModel.output.outputSubject
             .subscribe(on: DispatchQueue.global(qos: .background))
@@ -109,6 +126,9 @@ class MovieDetailsViewController : UIViewController {
         case.gotError(let message):
             showErrorAlert(on: self)
             print(message)
+        case .dataReadySimilar:
+            print("similar from controller \(viewModel.output.screenDataSimilar.map{$0.title})")
+            collectionView.reloadData()
         }
     }
     
@@ -119,8 +139,7 @@ class MovieDetailsViewController : UIViewController {
     override func loadView() {
         super.loadView()
         setupBindings()
-        
-        view.backgroundColor = UIColor(red: 0.17, green: 0.17, blue: 0.18, alpha: 1.0)
+        view.backgroundColor = Color.cellViewBackgroundColor
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -135,8 +154,16 @@ class MovieDetailsViewController : UIViewController {
         self.navigationController!.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationController!.navigationBar.shadowImage = UIImage()
         self.navigationController!.navigationBar.isTranslucent = true
+        setupCollectionView()
         setupViews()
         setupConstraints()
+    }
+    
+    func setupCollectionView() {
+        collectionView.collectionViewLayout = flowLayout
+        collectionView.delegate   = self
+        collectionView.dataSource = self
+        collectionView.register(SimilarCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
     }
     
     func setupViews() {
@@ -146,12 +173,13 @@ class MovieDetailsViewController : UIViewController {
         contentView.addSubview(movieDetailsStackView)
         contentView.insertSubview(watchedButton, aboveSubview: imageGradient)
         contentView.insertSubview(favoriteButton, aboveSubview: imageGradient)
+        contentView.addSubview(collectionView)
     }
     
     func setupConstraints(){
         scrollView.snp.makeConstraints { make in
             make.top.equalTo(view)
-            make.bottom.equalTo(view)
+//            make.bottom.equalTo(view)
             make.width.equalTo(view)
         }
         imageGradient.snp.makeConstraints { make in
@@ -169,8 +197,21 @@ class MovieDetailsViewController : UIViewController {
             make.bottom.equalTo(scrollView)
             make.width.equalTo(scrollView)
         }
+        collectionView.snp.makeConstraints { make in
+            make.top.equalTo(movieDetailsStackView.snp.bottom)
+            make.height.greaterThanOrEqualTo(100)
+        }
     }
     
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return viewModel.output.screenDataSimilar.count
+    }
     
-    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! SimilarCollectionViewCell
+        cell.backgroundColor = .white
+
+        cell.configure(imageURL: viewModel.output.screenDataSimilar[indexPath.row].posterPath, title: viewModel.output.screenDataSimilar[indexPath.row].title)
+        return cell
+    }
 }

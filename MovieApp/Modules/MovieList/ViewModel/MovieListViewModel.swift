@@ -12,6 +12,7 @@ enum MovieListOutput {
     case showLoader(Bool)
     case dataReady
     case gotError(String)
+    case dataReadySimilar
 }
 
 struct Output {

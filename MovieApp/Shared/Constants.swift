@@ -15,6 +15,7 @@ struct Constants {
     static let defaultPictureSize = "w500"
     static let imageBaseUrl =  "https://image.tmdb.org/t/p/"
     static let movieDetailsApiKey =  "?api_key="
+    static let similar = "/similar"
 }
 
 struct Color {

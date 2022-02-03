@@ -53,6 +53,8 @@ class MovieDetailsStackView : UIView{
         return content
     }()
     
+    
+    
     let stackview: UIStackView = {
         let stackview = UIStackView()
         stackview.translatesAutoresizingMaskIntoConstraints = false
