@@ -155,9 +155,53 @@ class MovieDetailsViewController : UIViewController, UICollectionViewDataSource,
         self.navigationController!.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationController!.navigationBar.shadowImage = UIImage()
         self.navigationController!.navigationBar.isTranslucent = true
+        
+        let swipeGestureRecognizerLeft = UISwipeGestureRecognizer(target: self, action: #selector(didSwipeLeft(_:)))
+        let swipeGestureRecognizerRight = UISwipeGestureRecognizer(target: self, action: #selector(didSwipeRight(_:)))
+        
+        swipeGestureRecognizerLeft.direction = .left
+        swipeGestureRecognizerRight.direction = .right
+        
+        scrollView.addGestureRecognizer(swipeGestureRecognizerLeft)
+        scrollView.addGestureRecognizer(swipeGestureRecognizerRight)
+
         setupCollectionView()
         setupViews()
         setupConstraints()
+    }
+    
+    @objc private func didSwipeLeft(_ sender: UISwipeGestureRecognizer) {
+        scrollToNextItem()
+    }
+    
+    @objc private func didSwipeRight(_ sender: UISwipeGestureRecognizer) {
+        scrollToPreviousItem()
+    }
+    
+    func scrollToNextItem() {
+        if collectionView.indexPathsForVisibleItems.count > 2
+        {
+            collectionView.setContentOffset(CGPoint(x: collectionView.contentOffset.x + 250, y: 0), animated: true)
+        } else
+        {
+            collectionView.scrollToItem(at: collectionView.indexPathsForVisibleItems[collectionView.indexPathsForVisibleItems.count-1], at: .right, animated: true)
+        }
+    }
+    
+    func scrollToPreviousItem() {
+        if collectionView.indexPathsForVisibleItems.count > 1
+        {
+            collectionView.setContentOffset(CGPoint(x: collectionView.contentOffset.x - 250, y: 0), animated: true)
+        } else
+        {
+            collectionView.scrollToItem(at: collectionView.indexPathsForVisibleItems[0], at: .left, animated: true)
+        }
+    }
+    
+    func scrollToFrame(scrollOffset : CGFloat) {
+        guard scrollOffset <= collectionView.contentSize.width else { return }
+        guard scrollOffset >= 0 else { return }
+        collectionView.setContentOffset(CGPoint(x: scrollOffset, y: collectionView.contentOffset.y), animated: true)
     }
     
     func setupCollectionView() {
