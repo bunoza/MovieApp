@@ -84,8 +84,9 @@ class MovieDetailsViewController : UIViewController, UICollectionViewDataSource,
     }
    
     func setupBindings() {
-        viewModel.setupBindingsDetails().store(in: &observers)
-        viewModel.setupBindingsSimilar().store(in: &observers)
+        let movieDetailsPublishers = viewModel.setupBindings()
+        movieDetailsPublishers.0.store(in: &observers)
+        movieDetailsPublishers.1.store(in: &observers)
         
         viewModel.output.outputSubject
             .subscribe(on: DispatchQueue.global(qos: .background))

@@ -15,12 +15,12 @@ struct OutputDetails {
     let outputSubject: PassthroughSubject<[MovieListOutput], Never>
 }
 
+struct InputDetails {
+    var inputDetails = CurrentValueSubject<MovieListInput, Never>(.loading(showLoader: true))
+    var inputSimilar = CurrentValueSubject<MovieListInput, Never>(.loading(showLoader: true))
+}
+
 class MovieDetailsViewModel {
-    
-    struct InputDetails {
-        var inputDetails = CurrentValueSubject<MovieListInput, Never>(.loading(showLoader: true))
-        var inputSimilar = CurrentValueSubject<MovieListInput, Never>(.loading(showLoader: true))
-    }
     
     var output : OutputDetails
     var input : InputDetails
@@ -30,6 +30,7 @@ class MovieDetailsViewModel {
     let repository = Repository()
     var genres : String
     var quote : String
+    var detailsRequested : Bool
     
     init(movie: MovieItem) {
         self.movie = movie
@@ -40,6 +41,7 @@ class MovieDetailsViewModel {
                                outputActions: [],
                                outputSubject: PassthroughSubject<[MovieListOutput], Never>())
         input = InputDetails()
+        detailsRequested = false
     }
     
     func watchedToggle() {
@@ -60,8 +62,8 @@ class MovieDetailsViewModel {
         output.outputSubject.send([.dataReady])
     }
     
-    func setupBindingsDetails() -> AnyCancellable {
-        return input.inputDetails
+    func setupBindings() -> (AnyCancellable, AnyCancellable) {
+        return (input.inputDetails
             .flatMap { [unowned self] inputAction -> AnyPublisher<[MovieListOutput], Never> in
                 switch inputAction {
                 case .loading:
@@ -80,30 +82,28 @@ class MovieDetailsViewModel {
             .sink { [unowned self] outputActions in
                 self.output.outputSubject.send(outputActions)
             }
+                ,
+                input.inputSimilar
+                    .flatMap { [unowned self] inputAction -> AnyPublisher<[MovieListOutput], Never> in
+                        switch inputAction {
+                        case .loading:
+                            print("show loader")
+                            return self.handleLoadScreenDataSimilar(true)
+                        case .loaded:
+                            print("dismiss loader")
+                            return self.handleLoadScreenDataSimilar(false)
+                        case .error:
+                            print("error")
+                            return self.handleLoadScreenDataSimilar(false)
+                        }
+                    }
+                    .subscribe(on: DispatchQueue.global(qos: .background))
+                    .receive(on: RunLoop.main)
+                    .sink { [unowned self] outputActions in
+                        self.output.outputSubject.send(outputActions)
+                    }
+        )
     }
-    
-    func setupBindingsSimilar() -> AnyCancellable {
-        return input.inputSimilar
-            .flatMap { [unowned self] inputAction -> AnyPublisher<[MovieListOutput], Never> in
-                switch inputAction {
-                case .loading:
-                    print("show loader")
-                    return self.handleLoadScreenDataSimilar(true)
-                case .loaded:
-                    print("dismiss loader")
-                    return self.handleLoadScreenDataSimilar(false)
-                case .error:
-                    print("error")
-                    return self.handleLoadScreenDataSimilar(false)
-                }
-            }
-            .subscribe(on: DispatchQueue.global(qos: .background))
-            .receive(on: RunLoop.main)
-            .sink { [unowned self] outputActions in
-                self.output.outputSubject.send(outputActions)
-            }
-    }
-    
     
     func handleLoadScreenData(_ showLoader: Bool) -> AnyPublisher<[MovieListOutput], Never> {
         var outputActions = [MovieListOutput]()
