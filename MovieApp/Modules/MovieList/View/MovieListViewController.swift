@@ -149,14 +149,8 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
             }.store(in: &buttonObservers)
         return cell
     }
-    func tableView(_ tableView: UITableView,
-                   didSelectRowAt indexPath: IndexPath) {
-        let controller = MovieDetailsViewController(viewModel: MovieDetailsViewModel(movie: viewModel.output.screenData[indexPath.row]))
-        controller.modalPresentationStyle = .overCurrentContext
-        controller.transitioningDelegate = self
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        self.navigationItem.backBarButtonItem?.tintColor = .white
-        self.navigationController?.pushViewController(controller, animated: true)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        MainCoordinator.openDetails(of: viewModel.output.screenData[indexPath.row])
     }
     
 }

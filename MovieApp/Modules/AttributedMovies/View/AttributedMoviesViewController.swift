@@ -10,11 +10,10 @@ import SnapKit
 import Combine
 import Tabman
 
-
 class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIViewControllerTransitioningDelegate {
     
     private let viewModel : AttributedMoviesViewModel
-
+    
     private var disposeBag = Set<AnyCancellable>()
     
     private let refreshControl = UIRefreshControl()
@@ -136,11 +135,11 @@ class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UIT
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell: CustomCellView = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomCellView
+        //        let cell: CustomCellView = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomCellView
         let cell: MovieCellView = MovieCellView()
         
         cell.configure(with: viewModel.output.screenData[indexPath.row])
-
+        
         if viewModel.tag == "watched" {
             cell.favoriteButton.isHidden = true
         }
@@ -163,8 +162,6 @@ class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UIT
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let movie = viewModel.output.screenData[indexPath.row]
-        let controller = MovieDetailsViewController(viewModel: MovieDetailsViewModel(movie: movie))
-        self.navigationController?.pushViewController(controller, animated: true)
+        MainCoordinator.openDetails(of: viewModel.output.screenData[indexPath.row])
     }
 }

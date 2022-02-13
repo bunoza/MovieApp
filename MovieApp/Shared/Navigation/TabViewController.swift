@@ -8,7 +8,9 @@
 import Tabman
 import Pageboy
 
-class TabViewController: TabmanViewController, PageboyViewControllerDataSource, TMBarDataSource {
+class TabViewController: TabmanViewController, PageboyViewControllerDataSource, TMBarDataSource, UIViewControllerTransitioningDelegate {
+    
+//    let coordinatorDelegate : MainCoordinatorDelegate
     
     func barItem(for bar: TMBar, at index: Int) -> TMBarItemable {
         switch index{
@@ -23,6 +25,15 @@ class TabViewController: TabmanViewController, PageboyViewControllerDataSource, 
         }
     }
     
+//    init(delegate: MainCoordinatorDelegate) {
+//        self.coordinatorDelegate = delegate
+//        super.init(nibName: nil, bundle: nil)
+//    }
+//
+//    required init?(coder aDecoder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
+    
     func numberOfViewControllers(in pageboyViewController: PageboyViewController) -> Int {
         return viewControllers.count
     }
@@ -35,8 +46,8 @@ class TabViewController: TabmanViewController, PageboyViewControllerDataSource, 
         return .at(index: 1)
     }
 
-    private var viewControllers = [AttributedMoviesViewController(viewModel: AttributedMoviesViewModel(tag: "watched")),
-                                   MovieListViewController(viewModel: MovieListViewModel()),
+    var viewControllers = [AttributedMoviesViewController(viewModel: AttributedMoviesViewModel(tag: "watched")),
+                           MovieListViewController(viewModel: MovieListViewModel()),
                                    AttributedMoviesViewController(viewModel: AttributedMoviesViewModel(tag: "favorites"))]
     
     func setupNavigationAppearance() {
