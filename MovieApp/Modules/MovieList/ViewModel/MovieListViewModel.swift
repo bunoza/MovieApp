@@ -30,6 +30,8 @@ class MovieListViewModel {
     let persistance = Database()
     var output : Output
     
+    var coordinatorDelegate: MovieListCoordinatorDelegate?
+    
     init(){
         repository = Repository()
         output = Output(screenData: [],
@@ -128,5 +130,8 @@ class MovieListViewModel {
         })
         return temp
     }
+    
+    func openDetails(with movie: MovieItem) {
+        coordinatorDelegate?.openDetails(with: movie)
+    }
 }
-

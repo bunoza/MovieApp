@@ -162,6 +162,6 @@ class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UIT
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        MainCoordinator.openDetails(of: viewModel.output.screenData[indexPath.row])
+        //MainCoordinator.openDetails(of: viewModel.output.screenData[indexPath.row])
     }
 }

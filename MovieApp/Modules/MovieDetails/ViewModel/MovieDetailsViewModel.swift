@@ -200,4 +200,8 @@ class MovieDetailsViewModel {
         print(temp.map{$0.title})
         return temp
     }
+    
+    func didFinish() {
+        coordinatorDelegate.coordinatorDidFinish()
+    }
 }

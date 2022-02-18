@@ -149,8 +149,9 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
             }.store(in: &buttonObservers)
         return cell
     }
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        MainCoordinator.openDetails(of: viewModel.output.screenData[indexPath.row])
-    }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let movie = viewModel.output.screenData[indexPath.row]
+        viewModel.openDetails(with: movie)
+    }
 }

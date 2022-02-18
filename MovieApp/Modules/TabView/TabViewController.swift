@@ -11,6 +11,12 @@ import Pageboy
 class TabViewController: TabmanViewController, PageboyViewControllerDataSource, TMBarDataSource, UIViewControllerTransitioningDelegate {
     
 //    let coordinatorDelegate : MainCoordinatorDelegate
+    var viewControllers: [UIViewController] = []
+    
+    func setViewControllers(viewControllers: [UIViewController]) {
+        self.viewControllers = viewControllers
+        reloadData()
+    }
     
     func barItem(for bar: TMBar, at index: Int) -> TMBarItemable {
         switch index{
@@ -46,10 +52,6 @@ class TabViewController: TabmanViewController, PageboyViewControllerDataSource, 
         return .at(index: 1)
     }
 
-    var viewControllers = [AttributedMoviesViewController(viewModel: AttributedMoviesViewModel(tag: "watched")),
-                           MovieListViewController(viewModel: MovieListViewModel()),
-                                   AttributedMoviesViewController(viewModel: AttributedMoviesViewModel(tag: "favorites"))]
-    
     func setupNavigationAppearance() {
         self.navigationController?.navigationBar.barStyle = .black
         self.navigationController?.navigationBar.tintColor = .white
@@ -59,7 +61,7 @@ class TabViewController: TabmanViewController, PageboyViewControllerDataSource, 
         super.viewDidLoad()
         setupNavigationAppearance()
         self.dataSource = self
-        self.title = ""
+        self.title = "tabman"
 
         // Create bar
         let bar = TMBar.ButtonBar()

@@ -73,6 +73,10 @@ class MovieDetailsViewController : UIViewController, UICollectionViewDataSource,
         super.init(nibName: nil, bundle: nil)
     }
     
+    override func didMove(toParent parent: UIViewController?) {
+        viewModel.didFinish()
+    }
+    
     func setupCurrentMovie() {
         imageGradient.configureImageGradient(imageURL: Constants.imageBaseUrl + Constants.defaultPictureSize + viewModel.movie.posterPath)
         movieDetailsStackView.setTitleText(title: viewModel.movie.title)
