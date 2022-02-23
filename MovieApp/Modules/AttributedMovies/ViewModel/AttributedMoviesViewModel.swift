@@ -19,6 +19,8 @@ class AttributedMoviesViewModel {
     
     let tag : String
     
+    var coordinatorDelegate: AttributedCoordinatorDelegate?
+    
     init(tag : String){
         repository = Repository()
         output = Output(screenData: [],
@@ -132,6 +134,10 @@ class AttributedMoviesViewModel {
             temp = temp.filter({$0.isFavourite != false})
         }
         return temp
+    }
+    
+    func openDetails(with movie: MovieItem) {
+        coordinatorDelegate?.openDetails(with: movie)
     }
 }
 

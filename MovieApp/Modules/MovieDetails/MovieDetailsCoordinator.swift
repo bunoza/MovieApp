@@ -5,10 +5,12 @@
 import Foundation
 import UIKit
 
-class MovieDetailsCoordintator: Coordinator {
+class MovieDetailsCoordinator: Coordinator {
     var childCoordinators: [Coordinator] = []
     
     var navigationController: UINavigationController
+    
+    var parent: TabViewCoordinatorDelegate?
     
     public init(navigationController: UINavigationController) {
         self.navigationController = navigationController

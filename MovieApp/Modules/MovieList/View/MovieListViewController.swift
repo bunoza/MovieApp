@@ -119,6 +119,7 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
             } else {
                 dismissOverlay(on: self)
             }
+            print("lodaer")
         case.gotError(let message):
             showErrorAlert(on: self)
             print(message)

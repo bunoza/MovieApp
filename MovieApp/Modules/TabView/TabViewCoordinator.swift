@@ -13,6 +13,7 @@ class TabViewCoordinator: Coordinator {
     var childCoordinators: [Coordinator] = []
     var navigationController: UINavigationController
     
+    var controller: TabViewController?
     var parent: ParentCoordinatorDelegate?
     
     init(navigationController: UINavigationController) {
@@ -21,20 +22,36 @@ class TabViewCoordinator: Coordinator {
     
     func start() {
         var viewControllers: [UIViewController] = []
+        viewControllers.append(createFavoriteController())
         viewControllers.append(createMovieListController())
-        let tab = TabViewController()
+        viewControllers.append(createWatchedController())
+        let controller = TabViewController()
         print(viewControllers.count)
-        tab.setViewControllers(viewControllers: viewControllers)
-        navigationController.pushViewController(tab, animated: true)
+        controller.setViewControllers(viewControllers: viewControllers)
+        navigationController.pushViewController(controller, animated: true)
     }
     
-    
     func createMovieListController() -> UIViewController {
-        let nav = UINavigationController()
-        let coordinator = MovieListCoordinator(navigationController: nav)
+        let coordinator = MovieListCoordinator(navigationController: navigationController)
         coordinator.parent = self
         childCoordinators.append(coordinator)
         coordinator.start()
+        return coordinator.controller!
+    }
+    
+    func createFavoriteController() -> UIViewController {
+        let coordinator = AttributedCoordinator(navigationController: navigationController)
+        coordinator.parent = self
+        childCoordinators.append(coordinator)
+        coordinator.startFavorites()
+        return coordinator.controller!
+    }
+    
+    func createWatchedController() -> UIViewController {
+        let coordinator = AttributedCoordinator(navigationController: navigationController)
+        coordinator.parent = self
+        childCoordinators.append(coordinator)
+        coordinator.startWatched()
         return coordinator.controller!
     }
 }
@@ -45,7 +62,7 @@ extension TabViewCoordinator: TabViewCoordinatorDelegate {
     }
     
     func openDetails(with movie: MovieItem) {
-        let coordinator = MovieDetailsCoordintator(navigationController: navigationController)
+        let coordinator = MovieDetailsCoordinator(navigationController: navigationController)
         childCoordinators.append(coordinator)
         coordinator.startDetails(with: movie)
     }

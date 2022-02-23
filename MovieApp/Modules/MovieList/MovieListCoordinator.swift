@@ -15,7 +15,7 @@ class MovieListCoordinator: Coordinator {
     var navigationController: UINavigationController
     var controller: MovieListViewController?
     
-    var parent: (ParentCoordinatorDelegate & TabViewCoordinatorDelegate)?
+    var parent: TabViewCoordinatorDelegate?
     
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
@@ -25,6 +25,7 @@ class MovieListCoordinator: Coordinator {
         let viewModel = MovieListViewModel()
         viewModel.coordinatorDelegate = self
         controller = MovieListViewController(viewModel: viewModel)
+        navigationController.pushViewController(controller!, animated: false)
     }
 }
 

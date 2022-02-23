@@ -10,7 +10,6 @@ import Pageboy
 
 class TabViewController: TabmanViewController, PageboyViewControllerDataSource, TMBarDataSource, UIViewControllerTransitioningDelegate {
     
-//    let coordinatorDelegate : MainCoordinatorDelegate
     var viewControllers: [UIViewController] = []
     
     func setViewControllers(viewControllers: [UIViewController]) {
@@ -30,15 +29,6 @@ class TabViewController: TabmanViewController, PageboyViewControllerDataSource, 
             return TMBarItem(title: "def")
         }
     }
-    
-//    init(delegate: MainCoordinatorDelegate) {
-//        self.coordinatorDelegate = delegate
-//        super.init(nibName: nil, bundle: nil)
-//    }
-//
-//    required init?(coder aDecoder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
     
     func numberOfViewControllers(in pageboyViewController: PageboyViewController) -> Int {
         return viewControllers.count
@@ -61,7 +51,7 @@ class TabViewController: TabmanViewController, PageboyViewControllerDataSource, 
         super.viewDidLoad()
         setupNavigationAppearance()
         self.dataSource = self
-        self.title = "tabman"
+        self.title = ""
 
         // Create bar
         let bar = TMBar.ButtonBar()

@@ -32,6 +32,9 @@ class MovieDetailsViewModel {
     var quote : String
     var detailsRequested : Bool
     
+    var coordinatorDelegate: MovieDetailsCoordinator?
+
+    
     init(movie: MovieItem) {
         self.movie = movie
         self.genres = ""
@@ -202,6 +205,6 @@ class MovieDetailsViewModel {
     }
     
     func didFinish() {
-        coordinatorDelegate.coordinatorDidFinish()
+        coordinatorDelegate?.coordinatorDidFinish()
     }
 }
