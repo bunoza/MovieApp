@@ -20,11 +20,11 @@ class TabViewController: TabmanViewController, PageboyViewControllerDataSource, 
     func barItem(for bar: TMBar, at index: Int) -> TMBarItemable {
         switch index{
         case 0:
-            return TMBarItem(title: "Watched")
+            return TMBarItem(title: "Favorites")
         case 1:
             return TMBarItem(title: "Popular")
         case 2:
-            return TMBarItem(title: "Favorites")
+            return TMBarItem(title: "Watched")
         default:
             return TMBarItem(title: "def")
         }
