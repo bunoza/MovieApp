@@ -6,13 +6,25 @@
 //
 
 import Foundation
+import Combine
 
-struct MovieItem {
-    let id: Int
-    let title: String
-    let overview: String
-    let posterPath: String
-    let releaseDate: String
+class MovieItem : Codable {
+    
+    var id: Int = 0
+    var title: String = ""
+    var overview: String = ""
+    var posterPath: String = ""
+    var releaseDate: String
     var isFavourite: Bool
     var isWatched: Bool
+    
+    init(id: Int, title: String, overview: String, posterPath: String, releaseDate: String, isFavourite: Bool, isWatched: Bool) {
+        self.id = id
+        self.title = title
+        self.overview = overview
+        self.posterPath = posterPath
+        self.releaseDate = releaseDate
+        self.isWatched = isWatched
+        self.isFavourite = isFavourite
+    }
 }

@@ -7,9 +7,14 @@
 
 import Foundation
 import UIKit
+import Kingfisher
 
 extension UIImageView {
     func setImageFromUrl(url : String) {
-        self.kf.setImage(with: URL(string: url), placeholder: nil, options: [], completionHandler: nil)
+        self.kf.setImage(with: URL(string: url), options: [], completionHandler: nil)
+    }
+    
+    func setImageFromUrlwithCompletion(url : String,  completion: @escaping (Result<RetrieveImageResult, KingfisherError>) -> ()) {
+        self.kf.setImage(with: URL(string: url), options: [], completionHandler: completion)
     }
 }

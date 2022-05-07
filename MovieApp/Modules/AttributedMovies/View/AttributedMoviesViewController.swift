@@ -1,20 +1,21 @@
 //
-//  ViewController.swift
+//  FavoriteMoviesViewController.swift
 //  MovieApp
 //
-//  Created by Domagoj Bunoza on 04.10.2021..
+//  Created by Domagoj Bunoza on 04.12.2021..
 //
 
 import UIKit
 import SnapKit
 import Combine
+import Tabman
 
-
-class MovieListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIViewControllerTransitioningDelegate {
+class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIViewControllerTransitioningDelegate {
     
-    let viewModel : MovieListViewModel
-    var observers = Set<AnyCancellable>()
-    var buttonObservers = Set<AnyCancellable>()
+    private let viewModel : AttributedMoviesViewModel
+    
+    private var disposeBag = Set<AnyCancellable>()
+    
     private let refreshControl = UIRefreshControl()
     
     let tableView : UITableView = {
@@ -25,7 +26,7 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
         return tableView
     }()
     
-    init(viewModel: MovieListViewModel) {
+    init(viewModel: AttributedMoviesViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -38,14 +39,9 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configureTitle(title : String) {
-        self.navigationItem.title = title
-        self.navigationController?.navigationBar.barStyle = .black
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureTitle(title: "MovieApp")
+        setupNavigationAppearance()
         setupView()
         view.backgroundColor = Color.cellViewBackgroundColor
     }
@@ -55,6 +51,12 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
         viewModel.input.send(.loading(showLoader: true))
         navigationController?.navigationBar.isHidden = true
         navigationController?.toolbar.isHidden = true
+    }
+    
+    func setupNavigationAppearance() {
+        self.navigationController?.navigationBar.barStyle = .black
+        self.navigationController?.navigationBar.backItem?.title = "title"
+        self.navigationItem.backBarButtonItem?.tintColor = .white
     }
     
     func setupTableView() {
@@ -78,21 +80,7 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
         setupConstraints()
         setupTableView()
         setupBindings()
-    }
-    
-    func setupBindings() {
-        viewModel.setupBindings().store(in: &observers)
-        
-        viewModel.output.outputSubject
-            .subscribe(on: DispatchQueue.global(qos: .background))
-            .receive(on: RunLoop.main)
-            .sink { [weak self] outputActions in
-                for action in outputActions {
-                    self?.handle(action)
-                    print("Action: \(action)")
-                }
-            }
-            .store(in: &observers)
+        configureRefreshControl()
     }
     
     func configureRefreshControl() {
@@ -108,6 +96,21 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
         viewModel.input.send(.loading(showLoader: true))
     }
     
+    func setupBindings() {
+        viewModel.setupBindings().store(in: &disposeBag)
+        
+        viewModel.output.outputSubject
+            .subscribe(on: DispatchQueue.global(qos: .background))
+            .receive(on: RunLoop.main)
+            .sink { [weak self] outputActions in
+                for action in outputActions {
+                    self?.handle(action)
+                    print("Action: \(action)")
+                }
+            }
+            .store(in: &disposeBag)
+    }
+    
     func handle(_ action: MovieListOutput) {
         switch action {
         case .dataReady:
@@ -119,12 +122,11 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
             } else {
                 dismissOverlay(on: self)
             }
-            print("lodaer")
         case.gotError(let message):
             showErrorAlert(on: self)
             print(message)
         case .dataReadySimilar:
-            print("similar")
+            break
         }
     }
     
@@ -133,21 +135,29 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell: CustomCellView = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomCellView
+        //        let cell: CustomCellView = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomCellView
         let cell: MovieCellView = MovieCellView()
+        
         cell.configure(with: viewModel.output.screenData[indexPath.row])
+        
+        if viewModel.tag == "watched" {
+            cell.favoriteButton.isHidden = true
+        }
+        else if viewModel.tag == "favorites" {
+            cell.watchedButton.isHidden = true
+        }
         
         cell.watchedButton.button
             .publisher(for: .touchUpInside)
             .sink { _ in
                 self.viewModel.watchedToggle(index: indexPath.row)
-            }.store(in: &buttonObservers)
+            }.store(in: &disposeBag)
         
         cell.favoriteButton.button
             .publisher(for: .touchUpInside)
             .sink { _ in
                 self.viewModel.favouriteToggle(index: indexPath.row)
-            }.store(in: &buttonObservers)
+            }.store(in: &disposeBag)
         return cell
     }
     

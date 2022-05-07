@@ -1,27 +1,14 @@
 //
-//  MovieListViewModel.swift
+//  FavoriteMoviesViewModel.swift
 //  MovieApp
 //
-//  Created by Domagoj Bunoza on 04.10.2021..
+//  Created by Domagoj Bunoza on 04.12.2021..
 //
 
 import Foundation
 import Combine
 
-enum MovieListOutput {
-    case showLoader(Bool)
-    case dataReady
-    case gotError(String)
-    case dataReadySimilar
-}
-
-struct Output {
-    var screenData: [MovieItem]
-    var outputActions: [MovieListOutput]
-    let outputSubject: PassthroughSubject<[MovieListOutput], Never>
-}
-
-class MovieListViewModel {
+class AttributedMoviesViewModel {
     
     var input = CurrentValueSubject<MovieListInput, Never>(.loading(showLoader: true))
     
@@ -30,14 +17,19 @@ class MovieListViewModel {
     let persistance = Database()
     var output : Output
     
-    var coordinatorDelegate: MovieListCoordinatorDelegate?
+    let tag : String
     
-    init(){
+    var coordinatorDelegate: AttributedCoordinatorDelegate?
+    
+    init(tag : String){
         repository = Repository()
         output = Output(screenData: [],
                         outputActions: [],
                         outputSubject: PassthroughSubject<[MovieListOutput], Never>())
+        self.tag = tag
     }
+    
+    
     
     func watchedToggle(index : Int) {
         output.screenData[index].isWatched.toggle()
@@ -45,6 +37,8 @@ class MovieListViewModel {
         if output.screenData[index].isFavourite || output.screenData[index].isWatched {
             persistance.store(movie: output.screenData[index])
         }
+        output.screenData.remove(at: index)
+               
         output.outputSubject.send([.dataReady])
     }
     
@@ -54,6 +48,7 @@ class MovieListViewModel {
         if output.screenData[index].isFavourite || output.screenData[index].isWatched {
             persistance.store(movie: output.screenData[index])
         }
+        output.screenData.remove(at: index)
         output.outputSubject.send([.dataReady])
     }
     
@@ -83,7 +78,10 @@ class MovieListViewModel {
     func handleLoadScreenData(_ showLoader: Bool) -> AnyPublisher<[MovieListOutput], Never> {
         var outputActions = [MovieListOutput]()
         return repository.getMoviesList()
+            .subscribe(on: DispatchQueue.global(qos: .background))
+            .receive(on: RunLoop.main)
             .map({ [unowned self] responseResult -> Result<[MovieItem], NetworkError> in
+                //self.output.outputActions.append(.showLoader(showLoader))
                 self.output.outputSubject.send([.showLoader(showLoader)])
                 switch responseResult {
                 case .success(let response):
@@ -99,6 +97,7 @@ class MovieListViewModel {
                 switch responseResult {
                 case .success(let screenData):
                     self.output.screenData = screenData
+                    output.outputActions.append(.dataReady)
                     self.output.outputSubject.send([.dataReady])
                     print(output.outputActions)
                 case .failure(let error):
@@ -117,7 +116,7 @@ class MovieListViewModel {
 
         let favoriteIds = persistance.fetchFavoritesIds()
         let watchedIds = persistance.fetchWatchedIds()
-
+        
         temp = response.map({
             movie in
             return MovieItem(id: movie.id,
@@ -128,6 +127,12 @@ class MovieListViewModel {
                              isFavourite: favoriteIds.contains(movie.id) ? true : false,
                              isWatched: watchedIds.contains(movie.id) ? true : false)
         })
+        if self.tag == "watched" {
+            temp = temp.filter({$0.isWatched != false})
+        }
+        if self.tag == "favorites" {
+            temp = temp.filter({$0.isFavourite != false})
+        }
         return temp
     }
     
@@ -135,3 +140,4 @@ class MovieListViewModel {
         coordinatorDelegate?.openDetails(with: movie)
     }
 }
+
