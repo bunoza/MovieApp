@@ -21,4 +21,11 @@ class Repository {
     func getSimilarMovies(movieID : Int) -> AnyPublisher<Result<MovieResponse, NetworkError>, Never> {
         RestManager.fetch(url: Constants.baseUrl + String(movieID) + Constants.similar + Constants.movieDetailsApiKey + Constants.apiKey)
     }
+    
+    func getLatestMovieID(completion: @escaping (Int) -> ()) {
+        RestManager.fetchLatestID(url: Constants.baseUrl + Constants.latest + Constants.movieDetailsApiKey + Constants.apiKey, completion: completion)
+    }
+    func getMovieDetailsOnce(movieID : Int, completion: @escaping (MovieDetails) -> ()) {
+        RestManager.fetchMovieDetailsOnce(url: Constants.baseUrl + String(movieID) + Constants.movieDetailsApiKey + Constants.apiKey, completion: completion)
+    }
 }

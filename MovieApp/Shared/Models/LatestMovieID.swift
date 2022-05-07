@@ -6,3 +6,7 @@
 //
 
 import Foundation
+
+struct LatestMovieID: Codable {
+    let id: Int
+}

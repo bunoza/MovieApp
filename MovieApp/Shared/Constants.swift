@@ -16,6 +16,7 @@ struct Constants {
     static let imageBaseUrl =  "https://image.tmdb.org/t/p/"
     static let movieDetailsApiKey =  "?api_key="
     static let similar = "/similar"
+    static let latest = "/latest"
 }
 
 struct Color {
