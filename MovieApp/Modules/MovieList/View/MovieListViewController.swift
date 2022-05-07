@@ -47,6 +47,7 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
         super.viewDidLoad()
         configureTitle(title: "MovieApp")
         setupView()
+        viewModel.getRandomMovie()
         view.backgroundColor = Color.cellViewBackgroundColor
     }
     
@@ -119,7 +120,7 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
             } else {
                 dismissOverlay(on: self)
             }
-            print("lodaer")
+            print("loader")
         case.gotError(let message):
             showErrorAlert(on: self)
             print(message)
@@ -128,12 +129,33 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
         }
     }
     
+    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+        if motion == .motionShake {
+            viewModel.openDetails(
+                with: createMovieItemFromDetails(details: viewModel.currentRandomMovie)
+            )
+            viewModel.getRandomMovie()
+        }
+    }
+    
+    func createMovieItemFromDetails(details: MovieDetails) -> MovieItem {
+        return MovieItem(
+            id: details.id,
+            title: details.title,
+            overview: details.overview,
+            posterPath: details.poster_path,
+            releaseDate: details.release_date,
+            isFavourite: viewModel.persistance.fetchFavoritesIds().contains(details.id),
+            isWatched: viewModel.persistance.fetchWatchedIds().contains(details.id)
+        )
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.output.screenData.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell: CustomCellView = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomCellView
+        //        let cell: CustomCellView = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomCellView
         let cell: MovieCellView = MovieCellView()
         cell.configure(with: viewModel.output.screenData[indexPath.row])
         

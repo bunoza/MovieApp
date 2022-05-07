@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MovieDetails : Codable {
+public struct MovieDetails : Codable {
     var backdrop_path: String?
     var genres: [Genre]
     var id: Int

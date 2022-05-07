@@ -30,6 +30,9 @@ class MovieListViewModel {
     let persistance = Database()
     var output : Output
     
+    var currentRandomID: Int
+    var currentRandomMovie: MovieDetails
+    
     var coordinatorDelegate: MovieListCoordinatorDelegate?
     
     init(){
@@ -37,6 +40,8 @@ class MovieListViewModel {
         output = Output(screenData: [],
                         outputActions: [],
                         outputSubject: PassthroughSubject<[MovieListOutput], Never>())
+        currentRandomID = 0
+        currentRandomMovie = MovieDetails(genres: [], id: 0, imdb_id: "", original_language: "", original_title: "", overview: "", poster_path: "", release_date: "", status: "", tagline: "", title: "")
     }
     
     func watchedToggle(index : Int) {
@@ -55,6 +60,20 @@ class MovieListViewModel {
             persistance.store(movie: output.screenData[index])
         }
         output.outputSubject.send([.dataReady])
+    }
+    
+    func getRandomMovie() {
+        repository.getLatestMovieID(completion: { id in
+            self.currentRandomID = id
+            let randomID = Int.random(in: 1...self.currentRandomID)
+            self.repository.getMovieDetailsOnce(movieID: randomID) { movie in
+                if movie.id == 0 {
+                    self.getRandomMovie()
+                }
+                self.currentRandomMovie = movie
+                print(movie)
+            }
+        })
     }
     
     func setupBindings() -> AnyCancellable {
@@ -78,7 +97,6 @@ class MovieListViewModel {
                 self.output.outputSubject.send(outputActions)
             }
     }
-    
     
     func handleLoadScreenData(_ showLoader: Bool) -> AnyPublisher<[MovieListOutput], Never> {
         var outputActions = [MovieListOutput]()
@@ -110,6 +128,7 @@ class MovieListViewModel {
     }
     
     func createScreenData(from response: [Movie]) -> [MovieItem] {
+        
         var temp = [MovieItem]()
         if response.isEmpty {
             return temp
