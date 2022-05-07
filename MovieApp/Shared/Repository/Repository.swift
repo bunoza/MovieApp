@@ -20,6 +20,5 @@ class Repository {
     
     func getSimilarMovies(movieID : Int) -> AnyPublisher<Result<MovieResponse, NetworkError>, Never> {
         RestManager.fetch(url: Constants.baseUrl + String(movieID) + Constants.similar + Constants.movieDetailsApiKey + Constants.apiKey)
-        
     }
 }

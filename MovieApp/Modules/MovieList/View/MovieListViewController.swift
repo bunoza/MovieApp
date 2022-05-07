@@ -119,12 +119,20 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
             } else {
                 dismissOverlay(on: self)
             }
-            print("lodaer")
+            print("loader")
         case.gotError(let message):
             showErrorAlert(on: self)
             print(message)
         case .dataReadySimilar:
             print("similar")
+        }
+    }
+    
+    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+        if motion == .motionShake {
+            let randomIndex = Int.random(in: 0...viewModel.output.screenData.count-1)
+            let movie = viewModel.output.screenData[randomIndex]
+            viewModel.openDetails(with: movie)
         }
     }
     
