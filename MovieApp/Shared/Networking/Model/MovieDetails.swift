@@ -8,6 +8,7 @@
 import Foundation
 
 public struct MovieDetails : Codable {
+    var adult: Bool?
     var backdrop_path: String?
     var genres: [Genre]
     var id: Int
@@ -17,6 +18,7 @@ public struct MovieDetails : Codable {
     var status, tagline, title: String
     
     enum CodingKeys: String, CodingKey {
+        case adult
         case backdrop_path
         case genres
         case id

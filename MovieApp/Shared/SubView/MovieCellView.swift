@@ -132,7 +132,7 @@ class MovieCellView: UITableViewCell {
     
     func setupConstraints() {
         imageYearGradient.snp.makeConstraints { (make) in
-            make.height.equalTo(170)
+//            make.height.equalTo(170)
             make.width.equalTo(130)
         }
         stackview.snp.makeConstraints { make in

@@ -69,8 +69,12 @@ class MovieListViewModel {
             self.repository.getMovieDetailsOnce(movieID: randomID) { movie in
                 if movie.id == 0 {
                     self.getRandomMovie()
+                } else if movie.adult == true {
+                    self.getRandomMovie()
                 }
-                self.currentRandomMovie = movie
+                else {
+                    self.currentRandomMovie = movie
+                }
                 print(movie)
             }
         })
@@ -81,13 +85,10 @@ class MovieListViewModel {
             .flatMap { [unowned self] inputAction -> AnyPublisher<[MovieListOutput], Never> in
                 switch inputAction {
                 case .loading:
-                    print("show loader")
                     return self.handleLoadScreenData(true)
                 case .loaded:
-                    print("dismiss loader")
                     return self.handleLoadScreenData(false)
                 case .error:
-                    print("error")
                     return self.handleLoadScreenData(false)
                 }
             }
@@ -118,13 +119,13 @@ class MovieListViewModel {
                 case .success(let screenData):
                     self.output.screenData = screenData
                     self.output.outputSubject.send([.dataReady])
-                    print(output.outputActions)
                 case .failure(let error):
                     outputActions.append(.gotError(error.localizedDescription))
                 }
                 
                 return Just(outputActions).eraseToAnyPublisher()
-            }.eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
     }
     
     func createScreenData(from response: [Movie]) -> [MovieItem] {
@@ -133,10 +134,12 @@ class MovieListViewModel {
         if response.isEmpty {
             return temp
         }
-
+        
         let favoriteIds = persistance.fetchFavoritesIds()
         let watchedIds = persistance.fetchWatchedIds()
-
+        print("favorites: \(favoriteIds)")
+        print("watched: \(watchedIds)")
+        
         temp = response.map({
             movie in
             return MovieItem(id: movie.id,

@@ -98,7 +98,6 @@ class MovieDetailsViewController : UIViewController, UICollectionViewDataSource,
             .sink { [weak self] outputActions in
                 for action in outputActions {
                     self?.handle(action)
-                    print("Action: \(action)")
                 }
             }
             .store(in: &observers)
@@ -122,7 +121,6 @@ class MovieDetailsViewController : UIViewController, UICollectionViewDataSource,
         switch action {
         case .dataReady:
             self.setupCurrentMovie()
-            print("setup current movie")
         case .showLoader(let showLoader):
             if showLoader {
                 showOverlay(on: self)
@@ -133,7 +131,6 @@ class MovieDetailsViewController : UIViewController, UICollectionViewDataSource,
             showErrorAlert(on: self)
             print(message)
         case .dataReadySimilar:
-            print("similar from controller \(viewModel.output.screenDataSimilar.map{$0.title})")
             collectionView.reloadData()
         }
     }
@@ -272,9 +269,5 @@ class MovieDetailsViewController : UIViewController, UICollectionViewDataSource,
         let cellWidth = 150
         let cellHeight = cellWidth
         return CGSize(width: cellWidth, height: cellHeight)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print(viewModel.output.screenDataSimilar[indexPath.row])
     }
 }
