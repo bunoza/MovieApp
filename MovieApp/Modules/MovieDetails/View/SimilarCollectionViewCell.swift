@@ -51,7 +51,7 @@ class SimilarCollectionViewCell : UICollectionViewCell {
         let gradient = CAGradientLayer()
         let startColor = Color.cellGradientStartColor
         let endColor = Color.cellGradientEndColor
-        gradient.colors = [startColor, endColor]
+        gradient.colors = [startColor!, endColor!]
         return gradient
     }()
     
