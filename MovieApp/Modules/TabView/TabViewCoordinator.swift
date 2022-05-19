@@ -29,7 +29,6 @@ class TabViewCoordinator: Coordinator {
         viewControllers.append(createMovieListController())
         viewControllers.append(createWatchedController())
         let controller = TabViewController()
-        print(viewControllers.count)
         controller.setViewControllers(viewControllers: viewControllers)
         navigationController.pushViewController(controller, animated: true)
     }

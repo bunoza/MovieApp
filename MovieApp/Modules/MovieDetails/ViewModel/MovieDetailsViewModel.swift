@@ -61,6 +61,7 @@ class MovieDetailsViewModel {
         persistence.removeByID(id: movie.id)
         if movie.isFavourite || movie.isWatched {
             persistence.store(movie: movie)
+            print("favorite clicked, favorite? \(movie.isFavourite), watched? \(movie.isWatched), id=\(movie.id)")
         }
         output.outputSubject.send([.dataReady])
     }
@@ -70,13 +71,10 @@ class MovieDetailsViewModel {
             .flatMap { [unowned self] inputAction -> AnyPublisher<[MovieListOutput], Never> in
                 switch inputAction {
                 case .loading:
-                    print("show loader")
                     return self.handleLoadScreenData(true)
                 case .loaded:
-                    print("dismiss loader")
                     return self.handleLoadScreenData(false)
                 case .error:
-                    print("error")
                     return self.handleLoadScreenData(false)
                 }
             }
@@ -90,13 +88,10 @@ class MovieDetailsViewModel {
                     .flatMap { [unowned self] inputAction -> AnyPublisher<[MovieListOutput], Never> in
                         switch inputAction {
                         case .loading:
-                            print("show loader")
                             return self.handleLoadScreenDataSimilar(true)
                         case .loaded:
-                            print("dismiss loader")
                             return self.handleLoadScreenDataSimilar(false)
                         case .error:
-                            print("error")
                             return self.handleLoadScreenDataSimilar(false)
                         }
                     }
@@ -130,7 +125,6 @@ class MovieDetailsViewModel {
                     self.output.screenDataDetails = screenData
                     output.outputActions.append(.dataReady)
                     self.output.outputSubject.send([.dataReady])
-                    print(output.outputActions)
                 case .failure(let error):
                     outputActions.append(.gotError(error.localizedDescription))
                 }
@@ -200,7 +194,7 @@ class MovieDetailsViewModel {
                              isWatched: watchedIds.contains(movie.id) ? true : false)
         })
         
-        print(temp.map{$0.title})
+        //print(temp.map{$0.title})
         return temp
     }
     

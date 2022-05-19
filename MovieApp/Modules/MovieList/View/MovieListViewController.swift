@@ -90,7 +90,6 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
             .sink { [weak self] outputActions in
                 for action in outputActions {
                     self?.handle(action)
-                    print("Action: \(action)")
                 }
             }
             .store(in: &observers)
@@ -113,14 +112,12 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
         switch action {
         case .dataReady:
             self.tableView.reloadData()
-            print("reload")
         case .showLoader(let showLoader):
             if showLoader {
                 showOverlay(on: self)
             } else {
                 dismissOverlay(on: self)
             }
-            print("loader")
         case.gotError(let message):
             showErrorAlert(on: self)
             print(message)
@@ -175,6 +172,9 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let movie = viewModel.output.screenData[indexPath.row]
-        viewModel.openDetails(with: movie)
+        viewModel.openDetails(
+            with: createMovieItemFromDetails(details: viewModel.currentRandomMovie)
+        )
+        viewModel.getRandomMovie()
     }
 }

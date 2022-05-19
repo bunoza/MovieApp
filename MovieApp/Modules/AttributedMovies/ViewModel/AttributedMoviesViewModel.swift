@@ -57,13 +57,10 @@ class AttributedMoviesViewModel {
             .flatMap { [unowned self] inputAction -> AnyPublisher<[MovieListOutput], Never> in
                 switch inputAction {
                 case .loading:
-                    print("show loader")
                     return self.handleLoadScreenData(true)
                 case .loaded:
-                    print("dismiss loader")
                     return self.handleLoadScreenData(false)
                 case .error:
-                    print("error")
                     return self.handleLoadScreenData(false)
                 }
             }
@@ -99,7 +96,6 @@ class AttributedMoviesViewModel {
                     self.output.screenData = screenData
                     output.outputActions.append(.dataReady)
                     self.output.outputSubject.send([.dataReady])
-                    print(output.outputActions)
                 case .failure(let error):
                     outputActions.append(.gotError(error.localizedDescription))
                 }

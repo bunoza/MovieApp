@@ -105,7 +105,6 @@ class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UIT
             .sink { [weak self] outputActions in
                 for action in outputActions {
                     self?.handle(action)
-                    print("Action: \(action)")
                 }
             }
             .store(in: &disposeBag)
@@ -115,7 +114,7 @@ class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UIT
         switch action {
         case .dataReady:
             self.tableView.reloadData()
-            print("reload")
+            print("Reloaded data")
         case .showLoader(let showLoader):
             if showLoader {
                 showOverlay(on: self)

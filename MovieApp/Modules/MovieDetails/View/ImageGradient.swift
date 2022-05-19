@@ -22,7 +22,7 @@ class ImageGradient : UIView {
         let gradient = CAGradientLayer()
         let startColor = Color.detailsGradientStartColor
         let endColor = Color.detailsGradientEndColor
-        gradient.colors = [startColor, endColor]
+        gradient.colors = [startColor!, endColor!]
         return gradient
     }()
     

@@ -18,7 +18,6 @@ class BlurLoaderOverlay {
     
     func showOverlay(on viewController: UIViewController) {
         viewController.view.addSubview(blurLoaderView)
-        
         NSLayoutConstraint.activate([
             blurLoaderView.topAnchor.constraint(equalTo: viewController.view.topAnchor),
             blurLoaderView.trailingAnchor.constraint(equalTo: viewController.view.trailingAnchor),
@@ -31,7 +30,6 @@ class BlurLoaderOverlay {
         if let viewWithTag = viewController.view.viewWithTag(100) {
             viewWithTag.removeFromSuperview()
         }else{
-            print("no view with such tag")
         }
     }
     
