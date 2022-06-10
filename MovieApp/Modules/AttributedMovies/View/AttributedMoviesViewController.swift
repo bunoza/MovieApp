@@ -114,6 +114,7 @@ class AttributedMoviesViewController: UIViewController, UITableViewDelegate, UIT
         switch action {
         case .dataReady:
             self.tableView.reloadData()
+            print(viewModel.output.screenData)
             print("Reloaded data")
         case .showLoader(let showLoader):
             if showLoader {

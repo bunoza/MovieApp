@@ -109,25 +109,11 @@ class AttributedMoviesViewModel {
         if response.isEmpty {
             return temp
         }
-
-        let favoriteIds = persistance.fetchFavoritesIds()
-        let watchedIds = persistance.fetchWatchedIds()
         
-        temp = response.map({
-            movie in
-            return MovieItem(id: movie.id,
-                             title: movie.title,
-                             overview: movie.overview,
-                             posterPath: movie.posterPath,
-                             releaseDate: movie.releaseDate,
-                             isFavourite: favoriteIds.contains(movie.id) ? true : false,
-                             isWatched: watchedIds.contains(movie.id) ? true : false)
-        })
-        if self.tag == "watched" {
-            temp = temp.filter({$0.isWatched != false})
-        }
-        if self.tag == "favorites" {
-            temp = temp.filter({$0.isFavourite != false})
+        if tag == "watched" {
+            temp = persistance.fetchWatched()
+        } else if tag == "favorites" {
+            temp = persistance.fetchFavorites()
         }
         return temp
     }

@@ -31,7 +31,7 @@ class MovieListViewModel {
     var output : Output
     
     var currentRandomID: Int
-    var currentRandomMovie: MovieDetails
+    var currentRandomMovie: MovieItem
     
     var coordinatorDelegate: MovieListCoordinatorDelegate?
     
@@ -41,7 +41,7 @@ class MovieListViewModel {
                         outputActions: [],
                         outputSubject: PassthroughSubject<[MovieListOutput], Never>())
         currentRandomID = 0
-        currentRandomMovie = MovieDetails(genres: [], id: 0, imdb_id: "", original_language: "", original_title: "", overview: "", poster_path: "", release_date: "", status: "", tagline: "", title: "")
+        currentRandomMovie = MovieItem(id: 0, title: "", overview: "", posterPath: "", releaseDate: "", isFavourite: false, isWatched: false)
     }
     
     func watchedToggle(index : Int) {
@@ -73,11 +73,17 @@ class MovieListViewModel {
                     self.getRandomMovie()
                 }
                 else {
-                    self.currentRandomMovie = movie
+                    self.currentRandomMovie = self.convertMovieDetailsToMovieItem(movie: movie)
                 }
-                print(movie)
             }
         })
+    }
+    
+    func convertMovieDetailsToMovieItem(movie: MovieDetails) -> MovieItem {
+        let favoriteIds = persistance.fetchFavoritesIds()
+        let watchedIds = persistance.fetchWatchedIds()
+
+        return MovieItem(id: movie.id, title: movie.title, overview: movie.overview, posterPath: movie.poster_path, releaseDate: movie.release_date, isFavourite: favoriteIds.contains(movie.id) ? true : false, isWatched: watchedIds.contains(movie.id) ? true : false)
     }
     
     func setupBindings() -> AnyCancellable {

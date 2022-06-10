@@ -193,8 +193,6 @@ class MovieDetailsViewModel {
                              isFavourite: favoriteIds.contains(movie.id) ? true : false,
                              isWatched: watchedIds.contains(movie.id) ? true : false)
         })
-        
-        //print(temp.map{$0.title})
         return temp
     }
     

@@ -129,23 +129,23 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
     override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
         if motion == .motionShake {
             viewModel.openDetails(
-                with: createMovieItemFromDetails(details: viewModel.currentRandomMovie)
+                with: viewModel.currentRandomMovie
             )
             viewModel.getRandomMovie()
         }
     }
-    
-    func createMovieItemFromDetails(details: MovieDetails) -> MovieItem {
-        return MovieItem(
-            id: details.id,
-            title: details.title,
-            overview: details.overview,
-            posterPath: details.poster_path,
-            releaseDate: details.release_date,
-            isFavourite: viewModel.persistance.fetchFavoritesIds().contains(details.id),
-            isWatched: viewModel.persistance.fetchWatchedIds().contains(details.id)
-        )
-    }
+//    
+//    func createMovieItemFromDetails(details: MovieDetails) -> MovieItem {
+//        return MovieItem(
+//            id: details.id,
+//            title: details.title,
+//            overview: details.overview,
+//            posterPath: details.poster_path,
+//            releaseDate: details.release_date,
+//            isFavourite: viewModel.persistance.fetchFavoritesIds().contains(details.id),
+//            isWatched: viewModel.persistance.fetchWatchedIds().contains(details.id)
+//        )
+//    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.output.screenData.count
@@ -173,7 +173,7 @@ class MovieListViewController: UIViewController, UITableViewDelegate, UITableVie
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let movie = viewModel.output.screenData[indexPath.row]
         viewModel.openDetails(
-            with: createMovieItemFromDetails(details: viewModel.currentRandomMovie)
+            with: movie
         )
         viewModel.getRandomMovie()
     }
